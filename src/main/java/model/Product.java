@@ -1,5 +1,7 @@
 package model;
 
+import utils.CurrencyFormat;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -127,5 +129,10 @@ public class Product {
 
     public void setProductSizes(List<ProductSize> productSizes) {
         this.productSizes = productSizes;
+    }
+
+    public String getProductPrice(double price) {
+        String priceNew = CurrencyFormat.covertPriceToString(price);
+        return priceNew;
     }
 }

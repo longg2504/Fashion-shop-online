@@ -5,6 +5,7 @@
   Time: 14:16
   To change this template use File | Settings | File Templates.
 --%>
+<%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java"%>
 <!DOCTYPE html>
 <html lang="en">
@@ -22,44 +23,43 @@
             <div class="collapse navbar-collapse" id="navbarResponsive">
                 <ul class="navbar-nav ml-left">
                     <li class="nav-item">
-                        <a class="nav-link" href="./index.jsp">Home
+                        <a class="nav-link" href="home">Home
                         </a>
                     </li>
                     <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="products.php?per_page=9&page=1&type=all" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false">Products</a>
-                        <div class="dropdown-menu">
-                            <a class="dropdown-item" href="products.php?per_page=9&page=1&type=all">ALL</a>
-                            <a class="dropdown-item" href="products.php?per_page=9&page=1&type=hoodie">Hoodie</a>
-                            <a class="dropdown-item" href="products.php?per_page=9&page=1&type=jacket">Jacket</a>
-                            <a class="dropdown-item" href="products.php?per_page=9&page=1&type=pants">Pants</a>
-                            <a class="dropdown-item" href="products.php?per_page=9&page=1&type=shirt">Shirt</a>
+                        <a class="nav-link dropdown-toggle" href="home" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false">Products</a>
+                        <div class="dropdown-menu" >
+                            <a class="dropdown-item" href="/products">ALL</a>
+                            <c:forEach items='${requestScope["ListAllCategory"]}' var="cate">
+                                <a  class="dropdown-item" href="/products?category_id=${cate.getId()}">${cate.getName()}</a>
+                            </c:forEach>
                         </div>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="checkout.php">Cart</a>
+                        <a class="nav-link" href="checkout">Cart</a>
                     </li>
                     <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="contact.php" role="button"  data-bs-toggle="dropdown" aria-expanded="false">More</a>
+                        <a class="nav-link dropdown-toggle" href="contact" role="button"  data-bs-toggle="dropdown" aria-expanded="false">More</a>
                         <div class="dropdown-menu">
-                            <a class="dropdown-item" href="contact.php">Contact</a>
-                            <a class="dropdown-item" href="about-us.php">About us</a>
+                            <a class="dropdown-item" href="contact">Contact</a>
+                            <a class="dropdown-item" href="about-us">About us</a>
                         </div>
                     </li>
 
                     <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="information.php" drole="button"  data-bs-toggle="dropdown" aria-expanded="false"></a>
+                        <a class="nav-link dropdown-toggle" href="information" drole="button"  data-bs-toggle="dropdown" aria-expanded="false"></a>
                         <div class="dropdown-menu">
-                            <a class="dropdown-item" href="information.php">Information</a>
-                            <a class="dropdown-item" href="history.php">History</a>
-                            <a class="dropdown-item" href="changePassword.php">Change password</a>
+                            <a class="dropdown-item" href="information">Information</a>
+                            <a class="dropdown-item" href="history">History</a>
+                            <a class="dropdown-item" href="changePassword">Change password</a>
                             <hr class="dropdown-divider">
-                            <a class="dropdown-item" href="logout.php">Sign-out</a>
+                            <a class="dropdown-item" href="logout">Sign-out</a>
                         </div>
                     </li>
-                    <li class="nav-item"><a class="nav-link" href="sign.php">Sign-In</a></li>
+                    <li class="nav-item"><a class="nav-link" href="sign">Sign-In</a></li>
                 </ul>
             </div>
-            <a class="navbar-brand" href="index.php">
+            <a class="navbar-brand" href="index">
                 <h2>Clothers<em> Store</em></h2>
             </a>
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">

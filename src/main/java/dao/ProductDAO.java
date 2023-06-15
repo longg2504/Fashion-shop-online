@@ -14,7 +14,9 @@ import java.util.List;
 public class ProductDAO extends DBContext {
     Connection conn = null;
     PreparedStatement pre = null;
-    private static final String SELECT_ALL = "select  p.id , p.name, p.price, p.describle, p.quantity,p.image,c.name as type from product p join category c on p.category_id = c.id;";
+    private static final String SELECT_ALL = "select  p.id , p.name, p.price, p.describle, p.quantity,p.image,c.name as type from product p join category c on p.category_id = c.id;"; //where
+    private static final String SELECT_PRODUCT_LIMIT = "select  p.id , p.name, p.price, p.describle, p.quantity,p.image,c.name as type from product p join category c on p.category_id = c.id limit 9";
+    private static final String SELECT_PRODUCT_LIMIT4 = "select  p.id , p.name, p.price, p.describle, p.quantity,p.image,c.name as type from product p join category c on p.category_id = c.id limit 4";
     private static final String INSERT_PRODUCT ="insert into product (category_id,name,price,descrilbe,quantity,image) values(?,?,?,?,?,?);";
     private static final String INSERT_PRODUCT_SIZE = "insert into product_size values(?,?);";
     private static final String DELETE_SIZE = "delete from product_size where id=?";
@@ -37,6 +39,34 @@ public class ProductDAO extends DBContext {
         }
         return list;
     }
+    public List<Product> getProduct9() throws Exception {
+        List<Product> list =new ArrayList<>();
+        conn = new DBContext().getConnection();
+        pre =conn.prepareStatement(SELECT_PRODUCT_LIMIT);
+        rs = pre.executeQuery();
+        while(rs.next()){
+            Category category = new Category();
+            category.setName(rs.getString(7));
+            list.add(new Product(rs.getInt(1),rs.getString(2),rs.getDouble(3),rs.getString(4),rs.getInt(5),rs.getString(6),category));
+        }
+        return list;
+    }
+
+    public List<Product> getProduct4() throws Exception {
+        List<Product> list =new ArrayList<>();
+        conn = new DBContext().getConnection();
+        pre =conn.prepareStatement(SELECT_PRODUCT_LIMIT4);
+        rs = pre.executeQuery();
+        while(rs.next()){
+            Category category = new Category();
+            category.setName(rs.getString(7));
+            list.add(new Product(rs.getInt(1),rs.getString(2),rs.getDouble(3),rs.getString(4),rs.getInt(5),rs.getString(6),category));
+        }
+        return list;
+    }
+
+
+
     public void insertProduct(Product product) throws Exception {
         conn = new DBContext().getConnection();
         pre=conn.prepareStatement(INSERT_PRODUCT);
@@ -152,7 +182,7 @@ public class ProductDAO extends DBContext {
         }
     }
 
-    public List<Product> getTop10Product() {
+    public List<Product>getTop10Product() {
         List<Product> list = new ArrayList<>();
         String sql = "SELECT p.id , p.name, p.price, p.describle, p.quantity,p.image FROM product p ORDER BY p.id DESC LIMIT 10;";
         try {
@@ -186,6 +216,23 @@ public class ProductDAO extends DBContext {
         return list;
     }
 
+    public List<Product> getProductByPriceDesc() {
+        List<Product> list = new ArrayList<>();
+        String sql = "select  p.id , p.name, p.price, p.describle, p.quantity,p.image,c.name  from product p join category c on p.category_id = c.id ORDER BY p.product_price DESC;";
+        try {
+            conn = new DBContext().getConnection();
+            pre = conn.prepareStatement(sql);
+            rs = pre.executeQuery();
+            while (rs.next()) {
+                Category c = new Category(rs.getString(7));
+                list.add(new Product(rs.getInt(1), rs.getString(2), rs.getDouble(3), rs.getString(4), rs.getInt(5), rs.getString(6),c));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return list;
+    }
+
 
     public List<Product> getProductByPriceAsc() {
         List<Product> list = new ArrayList<>();
@@ -197,6 +244,103 @@ public class ProductDAO extends DBContext {
             while (rs.next()) {
                 Category c = new Category(rs.getInt(7));
                 list.add(new Product(rs.getInt(1), rs.getString(2), rs.getFloat(3), rs.getString(4), rs.getInt(5), rs.getString(6),c));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return list;
+    }
+    public List<Product> getListByPage(List<Product> list, int start, int end) {
+        ArrayList<Product> arr = new ArrayList<>();
+        for (int i = start; i < end; i++) {
+            arr.add(list.get(i));
+        }
+        return arr;
+    }
+    public List<Product> getProductByCategory(int category_id) {
+        List<Product> list = new ArrayList<>();
+        String sql = "select p.id, p.name, p.price, p.describle, p.quantity,p.image,c.name from product p join category c on p.category_id = c.id WHERE p.category_id=?;";
+        try {
+            conn = new DBContext().getConnection();
+            pre = conn.prepareStatement(sql);
+            pre.setInt(1, category_id);
+            rs = pre.executeQuery();
+            while (rs.next()) {
+                Category c = new Category(rs.getString(7));
+                list.add(new Product(rs.getInt(1), rs.getString(2), rs.getFloat(3), rs.getString(4), rs.getInt(5), rs.getString(6),c));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return list;
+    }
+    public Product getProductByID(int product_id) {
+        List<Product> list = new ArrayList<>();
+        String sql = "select c.id, c.name , p.id , p.name, p.price, p.describle, p.quantity,p.image from product p join category c on p.category_id = c.id WHERE p.id=?;";
+        try {
+            conn = new DBContext().getConnection();
+            pre = conn.prepareStatement(sql);
+            pre.setInt(1, product_id);
+            rs = pre.executeQuery();
+            while (rs.next()) {
+                Category c = new Category(rs.getInt(1), rs.getString(2));
+                return (new Product(rs.getInt(3), rs.getString(4), rs.getFloat(5), rs.getString(6), rs.getInt(7), rs.getString(8),c));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+    public List<ProductSize> getSizeByID(int product_id) {
+        List<ProductSize> list = new ArrayList<>();
+        String sql = "select * from product_size where product_id=?;";
+        try {
+            conn = new DBContext().getConnection();
+            pre = conn.prepareStatement(sql);
+            pre.setInt(1, product_id);
+            rs = pre.executeQuery();
+            while (rs.next()) {
+                list.add(new ProductSize(rs.getInt(1), rs.getString(2)));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return list;
+    }
+
+    public List<Product> SearchAll(String text) {
+        List<Product> list = new ArrayList<>();
+        String sql = "SELECT DISTINCT p.id , p.name, p.price, p.describle, p.quantity,p.image,c.name\n" +
+                "FROM product p join category c on c.id = p.category_id\n" +
+                "WHERE p.name LIKE ? OR  p.price LIKE ? OR c.name LIKE ? ;";
+
+        try {
+            conn = new DBContext().getConnection();
+            pre = conn.prepareStatement(sql);
+            pre.setString(1, "%" + text + "%");
+            pre.setString(2, text);
+            pre.setString(3, "_%" + text + "%_");
+            rs = pre.executeQuery();
+            while (rs.next()) {
+                Category c = new Category(rs.getString(7));
+                list.add(new Product(rs.getInt(2), rs.getString(2), rs.getFloat(3), rs.getString(4), rs.getInt(5), rs.getString(6),c));
+            }
+        } catch (Exception e) {
+            System.out.println(e);
+        }
+        return list;
+    }
+
+    public List<Product> getProductByName() {
+        List<Product> list = new ArrayList<>();
+        String sql = "select  p.id , p.name, p.price, p.describle, p.quantity,p.image,c.name from product p join category c on p.category_id = c.id ORDER BY p.name;";
+        try {
+            conn = new DBContext().getConnection();
+            pre = conn.prepareStatement(sql);
+            rs = pre.executeQuery();
+            while (rs.next()) {
+                Category c = new Category(rs.getString(7));
+                list.add(new Product(rs.getInt(1), rs.getString(2), rs.getDouble(3), rs.getString(4), rs.getInt(5), rs.getString(6),c));
             }
         } catch (Exception e) {
             e.printStackTrace();
