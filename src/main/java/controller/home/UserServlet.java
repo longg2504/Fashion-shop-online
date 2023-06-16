@@ -35,11 +35,14 @@ public class UserServlet extends HttpServlet {
             case "login":
                 showLogin(req, resp);
                 break;
-//            case "signup":
-////                showSignup(req, resp);
-//                break;
+            case "logout":
+                checkOut(req,resp);
+                break;
 //            case "logout":
-//                showLogout(req, resp);
+//                checkOut(request,response);
+//                break;
+//        case "logout":
+//                checkOut(request,response);
 //                break;
 //            case "myAccount":
 //                showMyAccount(req, resp);
@@ -77,10 +80,19 @@ public class UserServlet extends HttpServlet {
                     throw new RuntimeException(e);
                 }
                 break;
+            case "logout":
+                checkOut(request,response);
+                break;
             default:
                 showLogin(request, response);
                 break;
         }
+    }
+
+    private void checkOut(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        HttpSession session = request.getSession();
+        session.invalidate();
+        response.sendRedirect("/home");
     }
 
     private void showLogin(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -150,22 +162,19 @@ public class UserServlet extends HttpServlet {
         } else {
             HttpSession session = request.getSession();
             session.setAttribute("user", user);
-            Cookie email = new Cookie("email", user_email);
-            Cookie pass = new Cookie("pass", user_pass);
-            Cookie rem = new Cookie("remember", remember);
-            if (remember != null) {
-                email.setMaxAge(60 * 60 * 24 * 30);
-                pass.setMaxAge(60 * 60 * 24 * 3);
-                rem.setMaxAge(60 * 60 * 24 * 30);
-            } else {
-                email.setMaxAge(0);
-                pass.setMaxAge(0);
-                rem.setMaxAge(0);
-            }
-            response.addCookie(email);
-            response.addCookie(pass);
-            response.addCookie(rem);
-            response.sendRedirect("index.jsp");
+//            if (remember != null) {
+//                email.setMaxAge(60 * 60 * 24 * 30);
+//                pass.setMaxAge(60 * 60 * 24 * 3);
+//                rem.setMaxAge(60 * 60 * 24 * 30);
+//            } else {
+//                email.setMaxAge(0);
+//                pass.setMaxAge(0);
+//                rem.setMaxAge(0);
+//            }
+//            response.addCookie(email);
+//            response.addCookie(pass);
+//            response.addCookie(rem);
+            response.sendRedirect("/home");
         }
     }
 

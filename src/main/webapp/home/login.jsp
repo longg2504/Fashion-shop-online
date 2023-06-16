@@ -53,7 +53,7 @@
         </form>
     </div>
     <div class="form-container sign-in-container">
-        <form action="user?action=checkLogin" method="POST">
+        <form action="/user?action=checkLogin" method="POST">
             <h1>Sign in</h1>
             <c:set var="cookie" value="${pageContext.request.cookies}"/>
             <div class="social-container">

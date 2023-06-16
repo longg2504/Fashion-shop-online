@@ -36,7 +36,7 @@
                         </div>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="checkout">Cart</a>
+                        <a class="nav-link" href="/cart">Cart</a>
                     </li>
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" href="contact" role="button"  data-bs-toggle="dropdown" aria-expanded="false">More</a>
@@ -46,17 +46,21 @@
                         </div>
                     </li>
 
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="information" drole="button"  data-bs-toggle="dropdown" aria-expanded="false"></a>
-                        <div class="dropdown-menu">
-                            <a class="dropdown-item" href="information">Information</a>
-                            <a class="dropdown-item" href="history">History</a>
-                            <a class="dropdown-item" href="changePassword">Change password</a>
-                            <hr class="dropdown-divider">
-                            <a class="dropdown-item" href="logout">Sign-out</a>
-                        </div>
-                    </li>
-                    <li class="nav-item"><a class="nav-link" href="sign">Sign-In</a></li>
+                    <c:if test="${sessionScope.user != null}">
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="information" drole="button"  data-bs-toggle="dropdown" aria-expanded="false">${sessionScope.user.getUser_email()}</a>
+                            <div class="dropdown-menu">
+                                <a class="dropdown-item" href="information">Information</a>
+                                <a class="dropdown-item" href="history">History</a>
+                                <a class="dropdown-item" href="changePassword">Change password</a>
+                                <hr class="dropdown-divider">
+                                <a class="dropdown-item" href="/user?action=logout">Sign-out</a>
+                            </div>
+                        </li>
+                    </c:if>
+                    <c:if test="${sessionScope.user == null}">
+                        <li class="nav-item"><a class="nav-link" href="/home/login.jsp">Sign-In</a></li>
+                    </c:if>
                 </ul>
             </div>
             <a class="navbar-brand" href="index">

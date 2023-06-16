@@ -38,7 +38,11 @@ public class ProductServlet extends HttpServlet {
                 }
                 break;
             case "product-detail":
-                showProductDetail(request, response);
+                try {
+                    showProductDetail(request, response);
+                } catch (Exception e) {
+                    throw new RuntimeException(e);
+                }
                 break;
             case "sortProductByPriceDesc":
                 try {
@@ -70,7 +74,7 @@ public class ProductServlet extends HttpServlet {
         }
     }
 
-    private void showProductDetail(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    private void showProductDetail(HttpServletRequest request, HttpServletResponse response) throws Exception {
         int product_id = Integer.parseInt(request.getParameter("product_id"));
         List<ProductSize> sizeList = productDAO.getSizeByID(product_id);
         Product product = productDAO.getProductByID(product_id);
@@ -78,8 +82,9 @@ public class ProductServlet extends HttpServlet {
             request.getRequestDispatcher("/404.jsp").forward(request, response);
         }
         int category_id = product.getCategory().getId();
+        List<Category> categories = productDAO.getCategory();
         List<Product> productByCategory = productDAO.getProductByCategory(category_id);
-
+        request.setAttribute("ListAllCategory",categories);
         request.setAttribute("ProductData", product);
         request.setAttribute("SizeData", sizeList);
         request.setAttribute("ProductByCategory", productByCategory);

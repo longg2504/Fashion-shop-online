@@ -50,40 +50,6 @@
         </div>
     </div>
 </div>
-<%--<?php--%>
-<%--    require_once('./API/connect.php');--%>
-<%--    $Pro_ID = $_GET['Pro_ID'];--%>
-<%--    foreach ($conn->query("SELECT * FROM product, images") as $row) :--%>
-
-<%--if ($row['Pro_ID'] == $Pro_ID && $row['img_ID'] == $Pro_ID) :--%>
-
-<%--if (isset($_POST["btn_submit"])) {--%>
-<%--$proArray = array(array(--%>
-<%--'Pro_ID' => $row['Pro_ID'],--%>
-<%--'Pro_Name' => $row['Pro_Name'],--%>
-<%--'Price' => $row['Price'],--%>
-<%--'Size' => $_POST['Size'],--%>
-<%--'Quantity' => $_POST['Quantity'],--%>
-<%--'Pro_Img' => $row['Pro_Img']--%>
-<%--));--%>
-
-<%--if (!empty($_SESSION["cart_item"])) {--%>
-
-<%--if (in_array($Pro_ID, array_column($_SESSION["cart_item"], 'Pro_ID')) && in_array($_POST['Size'], array_column($_SESSION["cart_item"], 'Size'))) {--%>
-
-<%--foreach ($_SESSION["cart_item"] as $k => $v) {--%>
-<%--if ($_SESSION["cart_item"][$k]['Pro_ID'] == $Pro_ID && $_SESSION["cart_item"][$k]['Size'] == $_POST['Size']) {--%>
-<%--$_SESSION["cart_item"][$k]["Quantity"] += $_POST["Quantity"];--%>
-<%--}--%>
-<%--}--%>
-<%--} else {--%>
-<%--$_SESSION["cart_item"] = array_merge($_SESSION["cart_item"], $proArray);--%>
-<%--}--%>
-<%--} else {--%>
-<%--$_SESSION["cart_item"] = $proArray;--%>
-<%--}--%>
-<%--}--%>
-<%--?>--%>
 <div class="products">
     <div class="container">
         <div class="row d-flex justify-content-center">
@@ -93,7 +59,7 @@
                 </div>
             </div>
             <div class="col-md-8 col-xs-12">
-                <form action="cart?action=addCart&product_id=${ProductData.getId()}" method="post" class="form">
+                <form action="/cart?action=addCart&product_id=${ProductData.getId()}" method="post" class="form">
                     <div class="mt-4 mb-4"><h2>${ProductData.getName()}</h2></div>
                     <div class="mt-4 mb-4">
                         <p class="lead">
@@ -126,12 +92,13 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="row justify-content-center mt-5">
-                            <div class="col-sm-4">
-                                <button type="submit" class="btn btn-outline-dark w-100" name="btn_submit">
-                                    <i class="fa fa-shopping-cart"></i> Add to Cart
-                                </button>
-                            </div>
+
+                    </div>
+                    <div class="row justify-content-center mt-5">
+                        <div class="col-sm-4">
+                            <button type="submit" class="btn btn-outline-dark w-100" name="btn_submit">
+                                <i class="fa fa-shopping-cart"></i> Add to Cart
+                            </button>
                         </div>
                     </div>
                 </form>
@@ -146,10 +113,10 @@
             <div class="col-md-12">
                 <div class="section-heading">
                     <h2>Similar Products</h2>
-                    <a href="products.php">view more <i class="fa fa-angle-right"></i></a>
+                    <a href="products?category_id=${ProductData.category.getId()}">view more <i class="fa fa-angle-right"></i></a>
                 </div>
             </div>
-            <?php require_once('./API/similarProducts.php'); ?>
+            <jsp:include page="/layout/similarProducts.jsp"/>
         </div>
     </div>
 </div>

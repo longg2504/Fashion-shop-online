@@ -6,7 +6,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Cart {
-    //đừng vô cái này em lạy anh nguyên
 
     private User user;
     List<Item> items;

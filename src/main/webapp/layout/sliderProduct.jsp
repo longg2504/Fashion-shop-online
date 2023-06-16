@@ -19,8 +19,8 @@
                     <h4>${p.getName()}</h4>
                 </a>
                 <strong style="font-size: 26px"  class="text-danger" href="products?action=product-detail&product_id=${p.getId()}">${(p.getProductPrice(p.getPrice()))}</strong>
-                <form method="post">
-                    <a type="submit" href="product-details?id="class="btn btn-outline-dark w-100">
+                <form>
+                    <a href="/products?action=product-detail&product_id=${p.getId()}" type="submit" class="btn btn-outline-dark w-100">
                         <i class="fa fa-shopping-cart"></i>Add to Cart
                     </a>
                 </form>
