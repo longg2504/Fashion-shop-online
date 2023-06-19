@@ -20,13 +20,13 @@
                     </a>
                     <strong style="font-size: 26px"  class="text-danger" href="products?action=product-detail&product_id=${p.getId()}">${(p.getProductPrice(p.getPrice()))}</strong>
                     <form>
-                        <a type="submit" href="/cart?action=addCart&product_id=${p.getId()}"class="btn btn-outline-dark w-100">
+                        <a type="submit" href="/products?action=product-detail&product_id=${p.getId()}"class="btn btn-outline-dark w-100">
                             <i class="fa fa-shopping-cart"></i>Add to Cart
                         </a>
                     </form>
                 </div>
 
-            </div>
+            </div>`
         </div>
     </c:forEach>
 </div>

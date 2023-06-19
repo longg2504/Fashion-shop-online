@@ -8,6 +8,7 @@ import model.ProductSize;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -143,14 +144,18 @@ public class ProductDAO extends DBContext {
             return list;
         }
 
-    public List<Category> getCategory() throws Exception {
+    public List<Category> getCategory() {
         List<Category> list = new ArrayList<>();
+        try {
             conn = new DBContext().getConnection();
             pre = conn.prepareStatement(SELECT_CATEGORY);
             rs = pre.executeQuery();
             while (rs.next()) {
                 list.add(new Category(rs.getInt(1), rs.getString(2)));
             }
+        } catch (SQLException sqlException) {
+            printSQLException(sqlException);
+        }
         return list;
     }
 
@@ -291,6 +296,24 @@ public class ProductDAO extends DBContext {
         }
         return null;
     }
+    public Product getProductByIDAndSize(int product_id , String size) {
+        List<Product> list = new ArrayList<>();
+        String sql = "select c.id, c.name , p.id , p.name, p.price, p.describle, p.quantity,p.image from product p join category c on p.category_id = c.id WHERE p.id=? and p.size=?;";
+        try {
+            conn = new DBContext().getConnection();
+            pre = conn.prepareStatement(sql);
+            pre.setInt(1, product_id);
+            pre.setString(2,size);
+            rs = pre.executeQuery();
+            while (rs.next()) {
+                Category c = new Category(rs.getInt(1), rs.getString(2));
+                return (new Product(rs.getInt(3), rs.getString(4), rs.getFloat(5), rs.getString(6), rs.getInt(7), rs.getString(8),c));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
     public List<ProductSize> getSizeByID(int product_id) {
         List<ProductSize> list = new ArrayList<>();
         String sql = "select * from product_size where product_id=?;";
@@ -347,5 +370,7 @@ public class ProductDAO extends DBContext {
         }
         return list;
     }
+
+    
 
 }

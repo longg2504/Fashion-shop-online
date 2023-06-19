@@ -14,6 +14,11 @@ public class Bill {
     public Bill() {
 
     }
+    public Bill(int bill_id, double total, Date date) {
+        this.bill_id = bill_id;
+        this.total = total;
+        this.createDate = date;
+    }
 
     public Bill(int bill_id, User user, double total, String payment, String address, Date createDate, String phone) {
         this.bill_id = bill_id;
@@ -22,6 +27,15 @@ public class Bill {
         this.payment = payment;
         this.address = address;
         this.createDate = createDate;
+        this.phone = phone;
+    }
+
+    public Bill(int bill_id, double total, String payment, String address, Date date, String phone) {
+        this.bill_id = bill_id;
+        this.total = total;
+        this.payment = payment;
+        this.address = address;
+        this.createDate = date;
         this.phone = phone;
     }
 

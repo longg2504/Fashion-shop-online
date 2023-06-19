@@ -127,6 +127,7 @@ public class Product {
         return productSizes;
     }
 
+
     public void setProductSizes(List<ProductSize> productSizes) {
         this.productSizes = productSizes;
     }

@@ -1,6 +1,7 @@
 package controller.home;
 import dao.ProductDAO;
 import model.*;
+import utils.CurrencyFormat;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
@@ -11,7 +12,9 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.util.List;
-    @WebServlet(name = "CartServlet", urlPatterns = "/cart")
+import java.util.Objects;
+
+@WebServlet(name = "CartServlet", urlPatterns = "/cart")
     public class CartServlet extends HttpServlet {
         private ProductDAO productDAO;
         @Override
@@ -27,22 +30,64 @@ import java.util.List;
             }
             switch (action) {
                 case "addCart":
-                    try {
-                        addCart(request, response);
-                    } catch (Exception e) {
-                        throw new RuntimeException(e);
-                    }
+                    addCart(request, response);
+                    break;
+                case "increase" :
+                case "decrease":
+                    reload(request,response);
+                    break;
+                case "deleteProduct":
+                    deleteProduct(request, response);
                     break;
                 default:
-                    try {
-                        showCart(request, response);
-                    } catch (Exception e) {
-                        throw new RuntimeException(e);
-                    }
+                    showCart(request, response);
                     break;
             }
         }
-        private void showCart(HttpServletRequest request, HttpServletResponse response) throws Exception {
+
+        private void reload(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
+            HttpSession session = request.getSession();
+            Object usercheck = session.getAttribute("user");
+            if(usercheck == null){
+                response.sendRedirect("/user");
+            }else{
+                Cart cart = (Cart) session.getAttribute("cart");
+                if(cart == null){
+                    cart = new Cart();
+                }
+                int id = Integer.parseInt(request.getParameter("product_id"));
+                String size = request.getParameter("sizeName");
+                int quantity = Integer.parseInt(request.getParameter("quantity")) ;
+                if(quantity < cart.getItemByIdAndSize(id,size).getQuantity()) {
+                    quantity = -1;
+                }
+                else{
+                    quantity = 1;
+                }
+                if (Objects.equals(quantity, "")) {
+                    request.setAttribute("error", "Số lượng không đúng! Vui lòng chọn lại...");
+                    showProductDetail(request, response);
+                } else {
+                    try {
+                        int sl = quantity;
+                        Product product = productDAO.getProductByID(id);
+                        Item item = new Item(product, sl, size);
+                        cart.addItem(item);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                    List<Item> list = cart.getItems();
+                    session.setAttribute("cart", cart);
+                    session.setAttribute("total", CurrencyFormat.covertPriceToString(cart.getTotalMoney(cart.getItems())));
+                    session.setAttribute("size", list.size());
+                    request.setAttribute("message", "Thêm sản phẩm thành công");
+                    showProductDetail(request, response);
+                }
+            }
+        }
+
+
+        private void showCart(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
             List<Category> categories = productDAO.getCategory();
             request.setAttribute("ListAllCategory",categories);
             request.getRequestDispatcher("/cart.jsp").forward(request, response);
@@ -56,19 +101,16 @@ import java.util.List;
             }
             switch (action) {
                 case "addCart":
-                    try {
-                        addCart(request, response);
-                    } catch (Exception e) {
-                        throw new RuntimeException(e);
-                    }
+                    addCart(request, response);
                     break;
-//            case "deleteProduct":
-//                deleteProduct(request, response);
-//                break;
+            case "deleteProduct":
+                deleteProduct(request, response);
+                break;
                 default:
+                    break;
             }
         }
-        private void addCart(HttpServletRequest request, HttpServletResponse response) throws Exception {
+        private void addCart(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
             HttpSession session = request.getSession();
             Object usercheck = session.getAttribute("user");
             if(usercheck == null){
@@ -94,10 +136,15 @@ import java.util.List;
                         Item item = new Item(product, sl, size);
                         cart.addItem(item);
                     } catch (Exception e) {
+
                     }
+                    Product product = productDAO.getProductByID(id);
+                    int category_id = product.getCategory().getId();
+                    List<Product> productByCategory = productDAO.getProductByCategory(category_id);
                     List<Item> list = cart.getItems();
+                    session.setAttribute("ProductByCategory",productByCategory);
                     session.setAttribute("cart", cart);
-                    session.setAttribute("total", cart.getTotalMoney());
+                    session.setAttribute("total", CurrencyFormat.covertPriceToString(cart.getTotalMoney(cart.getItems())));
                     session.setAttribute("size", list.size());
                     request.setAttribute("message", "Thêm sản phẩm thành công");
                     showProductDetail(request, response);
@@ -105,8 +152,7 @@ import java.util.List;
 
             }
         }
-        private void showProductDetail(HttpServletRequest request, HttpServletResponse response) throws
-                Exception {
+        private void showProductDetail(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
             int id = Integer.parseInt(request.getParameter("product_id"));
             List<ProductSize> sizeList = productDAO.getSizeByID(id);
             Product product = productDAO.getProductByID(id);
@@ -115,13 +161,31 @@ import java.util.List;
             }
             else{
                 int category_id = product.getCategory().getId();
-
                 List<Product> productByCategory = productDAO.getProductByCategory(category_id);
                 request.setAttribute("ProductData", product);
                 request.setAttribute("SizeData", sizeList);
                 request.setAttribute("ProductByCategory", productByCategory);
-                request.getRequestDispatcher("/product-detail.jsp").forward(request, response);
+//                request.getRequestDispatcher("/cart.jsp").forward(request, response);
+                response.sendRedirect("/cart");
             }
 
         }
+    private void deleteProduct(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
+        HttpSession session = request.getSession(true);
+        Cart cart = null;
+        Object o = session.getAttribute("cart");
+        if (o != null) {
+            cart = (Cart) o;
+        } else {
+            cart = new Cart();
+        }
+        int product_id = Integer.parseInt(request.getParameter("product_id"));
+        cart.removeItem(product_id);
+        List<Item> list = cart.getItems();
+        session.setAttribute("cart", cart);
+        session.setAttribute("total",CurrencyFormat.covertPriceToString(cart.getTotalMoney(cart.getItems())));
+        session.setAttribute("size", list.size());
+        request.setAttribute("message", "Xóa sản phẩm thành công");
+        request.getRequestDispatcher("/cart.jsp").forward(request, response);
+    }
     }

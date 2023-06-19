@@ -21,9 +21,26 @@ public class UserDAO extends DBContext {
     private static final String SELECT_USER = "select * from user";
     private static final String UPDATE_ISADMIN = "update user set isAdmin= ? where id = ?";
 
+    private static final String SELECT_ISMADIN_TRUE = "select * from user where user_email = ? and user_pass=? and isAdmin ='true'";
+
     public User checkUser(String user_email, String user_pass) throws Exception {
         conn = new DBContext().getConnection();
         ps = conn.prepareStatement(SELECT_ALL_USER);
+        ps.setString(1, user_email);
+        ps.setString(2, user_pass);
+        rs = ps.executeQuery();
+        while (rs.next()) {
+            User user = new User(rs.getInt(1), rs.getString(2),
+                    rs.getString(3), rs.getString(4),
+                    rs.getString(5));
+            return user;
+        }
+        return null;
+    }
+
+    public User checkAdmin(String user_email , String user_pass) throws SQLException {
+        conn = new DBContext().getConnection();
+        ps = conn.prepareStatement(SELECT_ISMADIN_TRUE);
         ps.setString(1, user_email);
         ps.setString(2, user_pass);
         rs = ps.executeQuery();

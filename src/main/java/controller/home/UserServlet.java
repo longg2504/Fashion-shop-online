@@ -158,23 +158,15 @@ public class UserServlet extends HttpServlet {
         if (user == null) {
             request.setAttribute("error", "Tài khoản không tồn tại hoặc mật khẩu không đúng !");
             request.getRequestDispatcher("/home/login.jsp").forward(request, response);
-//            response.sendRedirect("user?action=login");
         } else {
-            HttpSession session = request.getSession();
-            session.setAttribute("user", user);
-//            if (remember != null) {
-//                email.setMaxAge(60 * 60 * 24 * 30);
-//                pass.setMaxAge(60 * 60 * 24 * 3);
-//                rem.setMaxAge(60 * 60 * 24 * 30);
-//            } else {
-//                email.setMaxAge(0);
-//                pass.setMaxAge(0);
-//                rem.setMaxAge(0);
-//            }
-//            response.addCookie(email);
-//            response.addCookie(pass);
-//            response.addCookie(rem);
-            response.sendRedirect("/home");
+            if(user.getRole().equals("true")) {
+                response.sendRedirect("/admin/index.jsp");
+            }
+            else{
+                HttpSession session = request.getSession();
+                session.setAttribute("user", user);
+                response.sendRedirect("/home");
+            }
         }
     }
 

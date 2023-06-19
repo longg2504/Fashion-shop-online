@@ -4,6 +4,7 @@ import utils.CurrencyFormat;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class Cart {
 
@@ -40,6 +41,16 @@ public class Cart {
         return null;
     }
 
+
+    public Item getItemByIdAndSize(int id , String size){
+        for (Item i : items) {
+            if (i.getProduct().getId()==id && i.getSize().equals(size)) {
+                return i;
+            }
+        }
+        return null;
+    }
+
     private Item CheckItem(int id, String size) {
         for (Item i : items) {
             if (i.getProduct().getId() == id && i.size.equals(size)) {
@@ -52,8 +63,9 @@ public class Cart {
     // add 1 sản phẩm vào giỏ, nếu có rồi thì tăng số lượng
     public void addItem(Item t) {
         if (getItemById(t.getProduct().getId()) != null && CheckItem(t.getProduct().getId(), t.size) != null) {
-            Item m = getItemById(t.getProduct().getId());
-            m.setQuantity(m.getQuantity() + t.getQuantity());
+            Item m = getItemByIdAndSize(t.getProduct().getId(),t.size);
+                m.setQuantity(m.getQuantity() + t.getQuantity());
+
         } else {
             items.add(t);
         }
@@ -67,9 +79,9 @@ public class Cart {
     }
     //tổng tiền của cả giỏ hàng – sẽ add vào bảng Order
 
-    public double getTotalMoney() {
+    public double getTotalMoney(List<Item> ItemInputs) {
         double t = 0;
-        for (Item i : items) {
+        for (Item i : ItemInputs) {
             t += (i.getQuantity() * i.getProduct().getPrice());
         }
         return t;
