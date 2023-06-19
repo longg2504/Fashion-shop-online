@@ -31,7 +31,7 @@ public class BillDAO extends DBContext {
             ps.setString(6, phone);
             ps.executeUpdate();
 
-            String sql1 = "select bill_id from bill order by bill_id desc limit 1;";
+            String sql1 = "select id from bill order by id desc limit 1;";
             ps = conn.prepareStatement(sql1);
             rs = ps.executeQuery();
 
@@ -96,7 +96,7 @@ public class BillDAO extends DBContext {
             return null;
         }
 
-    public List<BillDetail> getDetail(int bill_id) {
+    public List<BillDetail>getDetail(int bill_id) {
         List<BillDetail> list = new ArrayList<>();
         String sql = "select d.detail_id, p.id, p.name, p.image, d.quantity, d.size,d.price from bill_detail d join product p on d.product_id = p.id where d.bill_id = ?;";
         try {
@@ -106,7 +106,7 @@ public class BillDAO extends DBContext {
             rs = ps.executeQuery();
             while (rs.next()) {
                 Product p = new Product(rs.getInt(2), rs.getString(3), rs.getString(4));
-                list.add(new BillDetail(rs.getInt(1), p, rs.getInt(5), rs.getString(6), rs.getString(7), rs.getDouble(8)));
+                list.add(new BillDetail(rs.getInt(1), p, rs.getInt(5), rs.getString(6),rs.getDouble(7)));
             }
         } catch (Exception e) {
         }

@@ -7,6 +7,7 @@
 --%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -18,7 +19,7 @@
 
     <link href="https://fonts.googleapis.com/css?family=Poppins:100,200,300,400,500,600,700,800,900&display=swap" rel="stylesheet">
 
-    <title>Romromshop.com</title>
+    <title>trungd3pn.xyz</title>
 
     <!-- Bootstrap core CSS -->
     <link href="vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
@@ -29,9 +30,10 @@
     <link rel="stylesheet" href="assets/css/owl.css">
 
 </head>
+
 <body>
 <!-- Header -->
-<jsp:include page="layout/header.jsp" />
+<jsp:include page="/layout/header.jsp"/>
 <!-- Page Content -->
 <div class="page-heading about-heading header-text" style="background-image: url(assets/images/headingBack.jpg);">
     <div class="container">
@@ -46,72 +48,111 @@
     </div>
 </div>
 <!--Shoppingcart-->
-</br>
 <div class="container">
-    <div class="row">
-        <div class="col col-md-12">
+    <form class=" d-flex justify-content-md-between mt-5" action="/checkout?action=payment" method="post">
+    <div class="row-cols-2" style="width: 50%;">
+        <div class="col" style="width: 100%; margin: 0;">
             <div class="section-heading">
-                <h2>Shopping cart</h2>
+                <h2 class="text-center">THÔNG TIN KHÁCH HÀNG</h2>
+            </div>
+            <div class="col-12 mb-3">
+                <div class="mb-1">Tên khách hàng <label style="color: red;">*</label></div>
+                <input class="col-12" readonly="" value="${sessionScope.user.getFirst_name()} ${sessionScope.user.getLast_name()}" type="text" placeholder="">
+            </div>
+            <div class="col-12 mb-3">
+                <div class="mb-1">Email <label style="color: red;">*</label></div>
+                <input class="col-12" readonly="" value="${sessionScope.user.getUser_email()}" type="text" placeholder="">
+            </div>
+            <div class="col-12 mb-3">
+                <div class="mb-1">Địa chỉ<label style="color: red;">*</label></div>
+                <input class="col-12" required name="address"  value="" type="text" placeholder="">
+            </div>
+            <div class="col-12 mb-3">
+                <div class="mb-1">Số Điện Thoại<label style="color: red;">*</label></div>
+                <input class="col-12" required name="phone" value="" type="tel" placeholder="">
+            </div>
+
+        </div>
+    </div>
+    <div class="row-cols-2" style="width: 45%;">
+        <div class="col" style="width: 100%;">
+            <div class="section-heading">
+                <h2 class="text-center">CHI TIẾT HOÁ ĐƠN</h2>
             </div>
             <table class="table table-hover" style="text-align:center;">
-                <?php
                 <thead>
                 <tr>
-                    <th>Image</th>
                     <th>Name</th>
-                    <th>Price</th>
                     <th>Size</th>
                     <th>Quantity</th>
                     <th>Total</th>
-                    <th>Action</th>
                 </tr>
                 </thead>
                 <tbody id="datarow">
+                <c:set var="o" value="${sessionScope.cart}"/>
+                <c:forEach items="${o.items}" var="i">
                 <tr>
-                    <td>
-                        <div class="col-sm-4 col-xs-6" style="max-width: 10rem;display: block;margin-left: auto;margin-right: auto;">
-                            <img src="<?= $item['Pro_Img'] ?>" alt="" class="img-fluid">
-                        </div>
-                    </td>
-                    <td><?= $item['Pro_Name'] ?></td>
-                    <td><?= number_format($item['Price'], 0, ".", ",") ?> VND</td>
-                    <td><?= $item['Size'] ?></td>
-                    <td style="max-width: 5rem;">
-                        <form action="" method="post">
-                            <input type="number" class="form-control" name="quantity" value="<?= $item['Quantity'] ?>">
-                        </form>
-
-                    </td>
-                    <td><?= number_format($item_price, 0, ".", ",") ?> VND</td>
-                    <td>
-                        <!-- Nút xóa, bấm vào sẽ xóa thông tin dựa vào khóa chính `sp_ma` -->
-
-                        <a name="bnt_delete" href="checkout.php?Pro_ID=<?= $item['Pro_ID'] ?>" class="btn btn-outline-dark">
-                            <i class="fa fa-trash" aria-hidden="true"></i>
-                        </a>
-                    </td>
+                    <td>${i.product.getName()}</td>
+                    <td>${i.getSize()}</td>
+                    <td> ${i.getQuantity()}</td>
+                    <td>${i.product.getProductPrice(i.product.getPrice() * i.getQuantity())}</td>
                 </tr>
+                </c:forEach>
                 </tbody>
                 <tfoot>
                 <tr>
-                    <th colspan="5" class="table-active">TOTAL</th>
-                    <th class="table-dark"><?= number_format($total_price, 0, ".", ",") ?> VND</th>
-                    <td class="table-dark"></td>
+                    <th colspan="4" class="table-active">TOTAL</th>
                 </tr>
-
+                <tr>
+                    <th colspan="4" class="table-dark text-center">${total}</th>
+                </tr>
                 </tfoot>
+
             </table>
+            <div class="payment_method">
+                <div class="panel-default">
+                    <input id="payment_defult" value="momo" name="payment_method" type="radio"
+                           data-target="createp_account" />
+                    <label for="payment_defult" data-toggle="collapse" data-target="#collapsedefult"
+                           aria-controls="collapsedefult">Momo <img src="assets/img/icon/papyel.png" alt=""></label>
+                </div>
+                <div class="panel-default">
+                    <input id="payment_defult" value="cod" name="payment_method" type="radio"
+                           data-target="createp_account" />
+                    <label for="payment_defult" data-toggle="collapse" data-target="#collapsedefult"
+                           aria-controls="collapsedefult">Thanh toán khi nhận hàng <img src="assets/img/icon/papyel.png" alt=""></label>
+                </div>
+                <div style="color: red; align-content: center;">
+                    ${requestScope.error_payment}
+                </div>
+                <form action="" method="post" >
+                    <div class="modal-footer justify-content-center mt-2" style="margin: 0; padding: 0;border: none;">
+                        <button  type="submit" style="margin: 0;" class="btn btn-outline-dark" name="bnt_remove">ĐẶT HÀNG</button>
+                    </div>
+                </form>
+            </div>
         </div>
     </div>
-    </br>
-    <form action="" method="post">
-        <div class="modal-footer">
-            <a href="?ac=remove" type="button" class="btn btn-outline-dark" name="bnt_remove">Remove</a>
-            <a href="?ac=buy" type="button" class="btn btn-dark" name="bnt_buy">Buy Now</a>
-        </div>
     </form>
+
 </div>
-<?php require_once('./API/footer.php'); ?>
+<jsp:include page="layout/footer.jsp"/>
+</body>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/11.7.5/sweetalert2.all.min.js" integrity="sha512-2JsZvEefv9GpLmJNnSW3w/hYlXEdvCCfDc+Rv7ExMFHV9JNlJ2jaM+uVVlCI1MAQMkUG8K83LhsHYx1Fr2+MuA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+<c:if test="${requestScope.message !=null}">
+    <script>
+        window.onload = function () {
+            Swal.fire({
+                position: 'top-end',
+                icon: 'success',
+                title: 'Đặt hàng thành công!',
+                showConfirmButton: false,
+                timer: 1500
+            })
+        };
+    </script>
+</c:if>
 <!-- Bootstrap core JavaScript -->
 <script src="vendor/jquery/jquery.min.js"></script>
 <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
@@ -120,6 +161,4 @@
 <!-- Additional Scripts -->
 <script src="assets/js/custom.js"></script>
 <script src="assets/js/owl.js"></script>
-</body>
-
 </html>

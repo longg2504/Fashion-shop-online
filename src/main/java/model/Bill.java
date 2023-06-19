@@ -1,5 +1,8 @@
 package model;
 
+import utils.CurrencyFormat;
+
+import java.util.Calendar;
 import java.util.Date;
 
 public class Bill {
@@ -93,5 +96,15 @@ public class Bill {
 
     public void setPhone(String phone) {
         this.phone = phone;
+    }
+
+    public String getBillTotal(double total) {
+        String totalNew = CurrencyFormat.covertPriceToString(total);
+        return totalNew;
+    }
+    public int getMonthFromDate(Date date) {
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(date);
+        return calendar.get(Calendar.MONTH) + 1; // Tháng trong Calendar được đánh số từ 0 đến 11, nên cần cộng 1.
     }
 }

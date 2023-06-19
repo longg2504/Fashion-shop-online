@@ -48,11 +48,11 @@
 
                     <c:if test="${sessionScope.user != null}">
                         <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle" href="information" drole="button"  data-bs-toggle="dropdown" aria-expanded="false">${sessionScope.user.getUser_email()}</a>
+                            <a class="nav-link dropdown-toggle"  drole="button"  data-bs-toggle="dropdown" aria-expanded="false">${sessionScope.user.getLast_name()}</a>
                             <div class="dropdown-menu">
-                                <a class="dropdown-item" href="information">Information</a>
-                                <a class="dropdown-item" href="history">History</a>
-                                <a class="dropdown-item" href="changePassword">Change password</a>
+                                <a class="dropdown-item" href="information.jsp">Information</a>
+                                <a class="dropdown-item" href="user?action=showHistory">History</a>
+                                <a class="dropdown-item" href="change-passwork.jsp">Change password</a>
                                 <hr class="dropdown-divider">
                                 <a class="dropdown-item" href="/user?action=logout">Sign-out</a>
                             </div>

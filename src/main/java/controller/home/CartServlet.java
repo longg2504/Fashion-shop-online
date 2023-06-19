@@ -36,9 +36,6 @@ import java.util.Objects;
                 case "decrease":
                     reload(request,response);
                     break;
-                case "deleteProduct":
-                    deleteProduct(request, response);
-                    break;
                 default:
                     showCart(request, response);
                     break;
@@ -179,7 +176,7 @@ import java.util.Objects;
         } else {
             cart = new Cart();
         }
-        int product_id = Integer.parseInt(request.getParameter("product_id"));
+        int product_id = Integer.parseInt(request.getParameter("txtId"));
         cart.removeItem(product_id);
         List<Item> list = cart.getItems();
         session.setAttribute("cart", cart);

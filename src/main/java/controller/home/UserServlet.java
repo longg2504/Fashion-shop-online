@@ -1,5 +1,6 @@
 package controller.home;
 
+import dao.BillDAO;
 import dao.UserDAO;
 
 
@@ -8,17 +9,22 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.*;
 import java.io.IOException;
 import java.sql.SQLException;
+import java.util.List;
 
+import model.Bill;
+import model.BillDetail;
 import model.User;
 import utils.ValidateUtils;
 
 @WebServlet(name="UserServlet",value = "/user")
 public class UserServlet extends HttpServlet {
     private UserDAO userDAO;
+    private BillDAO billDAO;
 
     @Override
     public void init() throws ServletException {
         userDAO = new UserDAO();
+        billDAO = new BillDAO();
     }
 
     @Override
@@ -38,26 +44,47 @@ public class UserServlet extends HttpServlet {
             case "logout":
                 checkOut(req,resp);
                 break;
-//            case "logout":
-//                checkOut(request,response);
-//                break;
-//        case "logout":
-//                checkOut(request,response);
-//                break;
-//            case "myAccount":
-//                showMyAccount(req, resp);
-//                break;
-//            case "showDetail":
-//                showBillDetail(req, resp);
-//                break;
+            case "showHistory":
+                showHistory(req, resp);
+                break;
+            case "showDetail":
+                showBillDetail(req, resp);
+                break;
             default:
                 showLogin(req, resp);
                 break;
         }
     }
 
+    private void showBillDetail(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        String bill_id = request.getParameter("bill_id");
+        int id = Integer.parseInt(bill_id);
+        List<BillDetail> detail = billDAO.getDetail(id);
+        request.setAttribute("detail", detail);
+        request.getRequestDispatcher("/billdetail.jsp").forward(request, response);
+    }
+
+    private void showHistory(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        HttpSession session = request.getSession(true);
+        try {
+            User user = (User) session.getAttribute("user");
+            if (user != null) {
+                int user_id = user.getUser_id();
+                List<Bill> bill = billDAO.getBillByID(user_id);
+                request.setAttribute("bill", bill);
+                request.getRequestDispatcher("/history.jsp").forward(request, response);
+            } else {
+                response.sendRedirect("user?action=login");
+            }
+        } catch (ServletException e) {
+            response.sendRedirect("user?action=login");
+        }
+    }
+
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        request.setCharacterEncoding("UTF-8");
+        response.setCharacterEncoding("UTF-8");
         String action = request.getParameter("action");
         if (action == null) {
             action = "";
@@ -71,7 +98,11 @@ public class UserServlet extends HttpServlet {
                 }
                 break;
             case "updateInfo":
-                updateInfo(request, response);
+                try {
+                    updateInfo(request, response);
+                } catch (Exception e) {
+                    throw new RuntimeException(e);
+                }
                 break;
             case "register":
                 try {
@@ -101,6 +132,8 @@ public class UserServlet extends HttpServlet {
 
     private void register(HttpServletRequest request, HttpServletResponse response) throws SQLException, ServletException, IOException {
         String user_email = request.getParameter("user_email_re");
+        String first_name = request.getParameter("first_name");
+        String last_name = request.getParameter("last_name");
         if (!ValidateUtils.isEmail(user_email)) {
             request.setAttribute("error_email", "Email không hợp lệ. Hãy nhập lại...");
             request.getRequestDispatcher("/home/login.jsp").forward(request, response);
@@ -113,7 +146,7 @@ public class UserServlet extends HttpServlet {
         } else {
             User a = userDAO.checkAcc(user_email);
             if (a == null) {
-                userDAO.signup(user_email, user_pass);
+                userDAO.signup(first_name,last_name,user_email, user_pass);
                 request.setAttribute("message", "Đăng ký thành công");
                 request.getRequestDispatcher("/home/login.jsp").forward(request, response);
             } else {
@@ -122,38 +155,33 @@ public class UserServlet extends HttpServlet {
             }
         }
     }
-
-    private void updateInfo(HttpServletRequest request, HttpServletResponse response) throws IOException {
+//D:\CodeG\casestudy_3\src\main\webapp\assets\images\Avatars
+    private void updateInfo(HttpServletRequest request, HttpServletResponse response) throws Exception {
         try {
+
             HttpSession session = request.getSession();
             User user = (User) session.getAttribute("user");
             if (user == null) {
                 response.sendRedirect("user?action=login");
             } else {
-                String user_name = request.getParameter("user_name");
-                if (!ValidateUtils.isFullName(user_name)) {
-                    request.setAttribute("error_name", "Tên của bạn không hợp lệ. Hãy nhập lại...");
-                    request.getRequestDispatcher("/my-account.jsp").forward(request, response);
-                }
+                String first_name = request.getParameter("first_name");
+                String last_name = request.getParameter("last_name");
                 String user_pass = request.getParameter("user_pass");
                 int user_id = user.getUser_id();
-                userDAO.UpdateUser(user_id, user_name, user_pass);
-                User user1 = new User(user.getUser_id(), user_name, user.getUser_email(), user_pass, user.getRole());
-                session.setAttribute("user", user1);
+                userDAO.UpdateUser(user_id ,user_pass);
+                user.setUser_pass(user_pass);
+                session.setAttribute("user", user);
                 request.setAttribute("message", "Đã cập nhật thành công");
-                request.getRequestDispatcher("/my-account.jsp").forward(request, response);
-
-            }
-        } catch (Exception e) {
-//            response.sendRedirect("user?action=login");
+                request.getRequestDispatcher("/change-passwork.jsp").forward(request, response);
+                }
+            }catch (Exception e){
             e.printStackTrace();
-        }
-    }
+        }}
+
 
     private void checkLogin(HttpServletRequest request, HttpServletResponse response) throws Exception {
         String user_email = request.getParameter("user_email");
         String user_pass = request.getParameter("user_pass");
-        String remember = request.getParameter("remember");
         User user = userDAO.checkUser(user_email, user_pass);
         if (user == null) {
             request.setAttribute("error", "Tài khoản không tồn tại hoặc mật khẩu không đúng !");

@@ -96,7 +96,7 @@
                             <td>${i.product.getProductPrice(i.product.getPrice() * i.getQuantity())}</td>
                             <td>
                                     <a href="javascript:;"
-                                       onclick="handleDelete('${i.product.getProduct_id()}')" class="btn btn-outline-dark">
+                                       onclick="handleDelete('${i.product.getId()}')" class="btn btn-outline-dark">
                                         <i class="fa fa-trash"></i>
                                     </a>
                             </td>
@@ -117,23 +117,10 @@
         <form action="" method="post">
             <div class="modal-footer">
                 <a href="checkout.jsp" type="button" class="btn btn-outline-dark"
-                   name="bnt_remove">Thanh Toan</a>
+                   name="bnt_remove">Thanh Toán</a>
             </div>
         </form>
 </div>
-<%--<div class="latest-products">--%>
-<%--    <div class="container">--%>
-<%--        <div class="row">--%>
-<%--            <div class="col-md-12">--%>
-<%--                <div class="section-heading">--%>
-<%--                    <h2>Similar Products</h2>--%>
-<%--                    <a href="products.jsp">view more <i class="fa fa-angle-right"></i></a>--%>
-<%--                </div>--%>
-<%--            </div>--%>
-<%--            <jsp:include page="/layout/similarProducts.jsp"/>--%>
-<%--        </div>--%>
-<%--    </div>--%>
-<%--</div>--%>
 <jsp:include page="/layout/footer.jsp"/>
 <!-- Bootstrap core JavaScript -->
 <script src="vendor/jquery/jquery.min.js"></script>

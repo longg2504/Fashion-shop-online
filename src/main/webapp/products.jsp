@@ -29,14 +29,11 @@
     <link rel="stylesheet" href="assets/css/fontawesome.css">
     <link rel="stylesheet" href="assets/css/style.css">
     <link rel="stylesheet" href="assets/css/owl.css">
-
 </head>
 
 <body>
-
 <!-- Header -->
 <jsp:include page="/layout/header.jsp"/>
-
 <!-- Page Content -->
 <div class="page-heading about-heading header-text" style="background-image: url(assets/images/headingBack.jpg);">
     <div class="container">

@@ -2,24 +2,66 @@ package model;
 
 public class User {
     int user_id;
-    String user_name;
+    String first_name;
+    String last_name;
     String user_email;
     String user_pass;
+
+    String phone;
+    String address;
     String role;
+
+    String image;
 
     public User() {
     }
 
-    public User(int user_id, String user_name, String user_email, String user_pass, String role) {
+    public User(int user_id, String first_name,String last_name, String user_email, String user_pass, String role) {
         this.user_id = user_id;
-        this.user_name = user_name;
+        this.first_name = first_name;
+        this.last_name = last_name;
         this.user_email = user_email;
         this.user_pass = user_pass;
         this.role = role;
+
     }
 
-    public User(String user_name) {
-        this.user_name = user_name;
+    public User(int user_id, String first_name, String last_name, String user_email, String user_pass,  String role, String image) {
+        this.user_id = user_id;
+        this.first_name = first_name;
+        this.last_name = last_name;
+        this.user_email = user_email;
+        this.user_pass = user_pass;
+        this.role = role;
+        this.image = image;
+    }
+
+    public String getFirst_name() {
+        return first_name;
+    }
+
+    public void setFirst_name(String first_name) {
+        this.first_name = first_name;
+    }
+
+    public String getPhone() {
+        return phone;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
+    public User(String last_name) {
+        this.last_name = last_name;
     }
 
     public int getUser_id() {
@@ -30,12 +72,12 @@ public class User {
         this.user_id = user_id;
     }
 
-    public String getUser_name() {
-        return user_name;
+    public String getLast_name() {
+        return last_name;
     }
 
-    public void setUser_name(String user_name) {
-        this.user_name = user_name;
+    public void setLast_name(String last_name) {
+        this.last_name = last_name;
     }
 
     public String getUser_email() {
@@ -60,5 +102,13 @@ public class User {
 
     public void setRole(String role) {
         this.role = role;
+    }
+
+    public String getImage() {
+        return image;
+    }
+
+    public void setImage(String image) {
+        this.image = image;
     }
 }

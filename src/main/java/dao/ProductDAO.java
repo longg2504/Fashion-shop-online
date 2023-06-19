@@ -130,7 +130,6 @@ public class ProductDAO extends DBContext {
             pre.setInt(7, product.getId());
             pre.executeUpdate();
 
-
     }
 
         public List<ProductSize> getSize() throws Exception {

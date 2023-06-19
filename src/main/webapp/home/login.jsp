@@ -24,12 +24,12 @@
 <body>
 <div class="container" id="container">
     <div class="form-container sign-up-container">
-        <form action="user?action=register" method="POST">
-            <c:if test="${requestScope.message !=null}">
+        <form action="/user?action=register" method="POST">
+            <c:if test="${requestScope.message !=null}"> 
                 <script>
                     window.onload = function () {
                         Swal.fire({
-                            position: 'center',
+                            position: 'top-end',
                             icon: 'success',
                             title: 'Đã tạo tài khoản thành công!',
                             showConfirmButton: false,
@@ -38,10 +38,10 @@
                     };
                 </script>
             </c:if>
-            <h1>Create Account</h1>
-            <div class="social-container">
-            </div>
+            <h1 style="font-size: 2rem">Create Account</h1>
             <span>use your email for registration</span>
+            <input type="text" name="first_name" placeholder="First Name">
+            <input type="text" name="last_name" placeholder="Last Name">
             <input type="email" name="user_email_re" placeholder="UserName"/>
             <div class="message" style="color: red; align-content: center;">${requestScope.error_email}</div>
             <div class="message" style="color: red; align-content: center;">${requestScope.emailavailable}</div>

@@ -8,27 +8,24 @@ public class BillDetail {
     Product product;
     int quantity;
     String size;
-    String color;
     double price;
 
     public BillDetail() {
     }
 
-    public BillDetail(int detail_id, int bill_id, Product product, int quantity, String size, String color) {
+    public BillDetail(int detail_id, int bill_id, Product product, int quantity, String size) {
         this.detail_id = detail_id;
         this.bill_id = bill_id;
         this.product = product;
         this.quantity = quantity;
         this.size = size;
-        this.color = color;
     }
 
-    public BillDetail(int detail_id, Product product, int quantity, String size, String color, double price) {
+    public BillDetail(int detail_id, Product product, int quantity, String size, double price) {
         this.detail_id = detail_id;
         this.product = product;
         this.quantity = quantity;
         this.size = size;
-        this.color = color;
         this.price = price;
     }
 
@@ -70,14 +67,6 @@ public class BillDetail {
 
     public void setSize(String size) {
         this.size = size;
-    }
-
-    public String getColor() {
-        return color;
-    }
-
-    public void setColor(String color) {
-        this.color = color;
     }
 
     public double getPrice() {

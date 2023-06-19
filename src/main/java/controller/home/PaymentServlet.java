@@ -35,7 +35,8 @@ public class PaymentServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        response.setContentType("text/html;charset=UTF-8");
+        request.setCharacterEncoding("UTF-8");
+        response.setCharacterEncoding("UTF-8");
         String action = request.getParameter("action");
         if (action == null) {
             action = "";
@@ -82,6 +83,7 @@ public class PaymentServlet extends HttpServlet {
                     acc = (User) u;
                     billDAO.addOrder(acc, cart, payment, address, phone);
                     session.removeAttribute("cart");
+                    session.removeAttribute("total");
                     session.setAttribute("size", 0);
                     if (payment_method.equals("cod")) {
                         request.setAttribute("message", "success");
