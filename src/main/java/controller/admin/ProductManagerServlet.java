@@ -174,7 +174,7 @@ public class ProductManagerServlet extends HttpServlet {
                     part.write(urlApp + "\\assets\\images" + File.separator + fileName);
                 }
             }
-            String product_img = "\\assets\\images" + fileNameProductImg;
+            String product_img = "\\assets\\images"+ File.separator + fileNameProductImg;
 
             String product_describe = request.getParameter("describe");
             String category_id = request.getParameter("category_id");
@@ -209,8 +209,7 @@ public class ProductManagerServlet extends HttpServlet {
             } else {
                 request.setAttribute("errors", errors);
             }
-            showProduct(request, response);
-//            request.getRequestDispatcher("/admin/insertProduct.jsp").forward(request, response);
+            request.getRequestDispatcher("/admin/insertProduct.jsp").forward(request, response);
 //            response.sendRedirect("/productManager?action=insertProduct");
         } catch (Exception e) {
             e.printStackTrace();
