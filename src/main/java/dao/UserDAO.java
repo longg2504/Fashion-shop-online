@@ -75,7 +75,8 @@ public class UserDAO extends DBContext {
 
     public void signup(String first_name , String last_name ,String user_email, String user_pass) throws SQLException {
         conn = new DBContext().getConnection();
-        ps = conn.prepareStatement(INSERT_USER);
+        ps = conn.prepareStatement(
+                INSERT_USER);
         ps.setString(1,first_name);
         ps.setString(2,last_name);
         ps.setString(3, user_email);

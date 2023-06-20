@@ -58,7 +58,7 @@
           <h6 class="text-center">Chúng tôi sẽ kiểm tra và thông báo đến bạn khi thanh toán hoàn tất !</h6>
           <div class="text-center">
             <img style="align-content: center; margin-top: 10px" height="300px" width="300px"
-                 src="/assets/images/fb4629baa74f76112f5e.jpg">
+                 src="/assets/images/a.jpg">
           </div>
           <div class="text-center mt-3">
               <a class="btn btn-dark" style="text-align: center" href="home">Tiếp tục mua hàng</a>

@@ -13,6 +13,10 @@ public class ProductSize {
         this.size = size;
     }
 
+    public ProductSize(String size) {
+        this.size=size;
+    }
+
     public int getProduct_id() {
         return product_id;
     }

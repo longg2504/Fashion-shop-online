@@ -188,6 +188,8 @@ public class UserServlet extends HttpServlet {
             request.getRequestDispatcher("/home/login.jsp").forward(request, response);
         } else {
             if(user.getRole().equals("true")) {
+                HttpSession session = request.getSession();
+                session.setAttribute("user", user);
                 response.sendRedirect("/admin/index.jsp");
             }
             else{

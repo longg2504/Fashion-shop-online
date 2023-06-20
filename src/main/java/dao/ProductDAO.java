@@ -18,15 +18,17 @@ public class ProductDAO extends DBContext {
     private static final String SELECT_ALL = "select  p.id , p.name, p.price, p.describle, p.quantity,p.image,c.name as type from product p join category c on p.category_id = c.id;"; //where
     private static final String SELECT_PRODUCT_LIMIT = "select  p.id , p.name, p.price, p.describle, p.quantity,p.image,c.name as type from product p join category c on p.category_id = c.id limit 9";
     private static final String SELECT_PRODUCT_LIMIT4 = "select  p.id , p.name, p.price, p.describle, p.quantity,p.image,c.name as type from product p join category c on p.category_id = c.id limit 4";
-    private static final String INSERT_PRODUCT ="insert into product (category_id,name,price,descrilbe,quantity,image) values(?,?,?,?,?,?);";
+    private static final String INSERT_PRODUCT ="insert into product (category_id,name,price,describle,quantity,image) values(?,?,?,?,?,?);";
     private static final String INSERT_PRODUCT_SIZE = "insert into product_size values(?,?);";
-    private static final String DELETE_SIZE = "delete from product_size where id=?";
+    private static final String DELETE_SIZE = "delete from product_size where product_id=?";
 
     private static final String DELETE_PRODUCT = "delete from product where id=?";
 
     private static final String UPDATE_PRODUCT = "update product set category_id=? ,name=? ,price=? ,describle=? ,quantity=? ,image=? where id=?;";
     private static final String SELECT_PRODUCT_SIZE = "select * from product_size";
     private static final String SELECT_CATEGORY = "select * from category";
+
+    private static final String SELECT_MAX_ID = "SELECT max(id) from product;";
     ResultSet rs = null;
     public List<Product> getProduct() throws Exception {
         List<Product> list =new ArrayList<>();
@@ -66,26 +68,39 @@ public class ProductDAO extends DBContext {
         return list;
     }
 
+    public int getMaxId(Connection conn) throws Exception {
+        pre =conn.prepareStatement(SELECT_MAX_ID);
+        rs = pre.executeQuery();
+        while (rs.next()) {
+            return rs.getInt(1);
+        }
+       return  -1;
+    }
+
 
 
     public void insertProduct(Product product) throws Exception {
-        conn = new DBContext().getConnection();
+        conn = getConnection();
         pre=conn.prepareStatement(INSERT_PRODUCT);
         pre.setInt(1,product.getCategory().getId());
         pre.setString(2,product.getName());
         pre.setDouble(3,product.getPrice());
         pre.setString(4,product.getDescrible());
-        pre.setFloat(5,product.getQuantity());
+        pre.setInt(5,product.getQuantity());
         pre.setString(6,product.getImage());
+        pre.executeUpdate();
+
+        int productId = getMaxId(conn);
+
 
         //them size cho bang ProductSize
-        conn=new DBContext().getConnection();
         for(ProductSize i : product.getProductSizes()){
             pre=conn.prepareStatement(INSERT_PRODUCT_SIZE);
-            pre.setInt(1,i.getProduct_id());
+            pre.setInt(1,productId);
             pre.setString(2,i.getSize());
             pre.executeUpdate();
         }
+        conn.close();
     }
 
     public void DeleteProduct(int id) throws Exception {
@@ -110,7 +125,6 @@ public class ProductDAO extends DBContext {
         pre.executeUpdate();
 
         //ghi lai size vao bang size
-        conn=new DBContext().getConnection();
         for(ProductSize i : product.getProductSizes()) {
             pre = conn.prepareStatement(INSERT_PRODUCT_SIZE);
             pre.setInt(1, i.getProduct_id());
@@ -119,7 +133,6 @@ public class ProductDAO extends DBContext {
         }
 
         //update bang product
-            conn = new DBContext().getConnection();
             pre = conn.prepareStatement(UPDATE_PRODUCT);
             pre.setInt(1, product.getCategory().getId());
             pre.setString(2, product.getName());
@@ -159,7 +172,7 @@ public class ProductDAO extends DBContext {
     }
 
     public Category getCategoryByName(String name) {
-        String sql = "select * from category where category_name = ?;";
+        String sql = "select * from category where name = ?;";
         try {
             conn = new DBContext().getConnection();
             pre = conn.prepareStatement(sql);

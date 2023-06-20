@@ -9,16 +9,19 @@ import model.User;
 import utils.ValidateUtils;
 
 import javax.servlet.ServletException;
+import javax.servlet.annotation.MultipartConfig;
 import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
+import javax.servlet.http.*;
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-@WebServlet(name = "ProductManagerServlet", urlPatterns = "/productManager")
+@WebServlet(name = "ProductManagerServlet", urlPatterns ="/productManager")
+@MultipartConfig(fileSizeThreshold = 1024 * 1024 * 2, // 2MB
+        maxFileSize = 1024 * 1024 * 50, // 50MB
+        maxRequestSize = 1024 * 1024 * 50) // 50MB
+
 public class ProductManagerServlet extends HttpServlet {
     private AdminDAO adminDAO;
     private ProductDAO productDAO;
@@ -77,7 +80,7 @@ public class ProductManagerServlet extends HttpServlet {
         try {
             List<Category> categories = productDAO.getCategory();
             request.setAttribute("CategoryData", categories);
-            request.getRequestDispatcher("/admin/insertProduct.jsp").forward(request, response);
+            request.getRequestDispatcher("admin/insertProduct.jsp").forward(request, response);
         } catch (Exception e) {
             response.sendRedirect("404.jsp");
         }
@@ -111,79 +114,111 @@ public class ProductManagerServlet extends HttpServlet {
             case "insertCategory":
                 insertCategory(request, response);
                 break;
-//            case "insertProduct":
-//                insertProduct(request, response);
-//                break;
-//            case "updateProduct":
-//                updateProduct(request,response);
-//                break;
-
+            case "insertProduct":
+                insertProduct(request, response);
+                break;
+            case "updateProduct":
+                try {
+                    updateProduct(request,response);
+                } catch (Exception e) {
+                    System.out.println(e.getMessage());
+                }
+                break;
+            case "deleteProduct":
+                deleteProduct(request, response);
+                break;
         }
     }
 
-//    private void insertProduct(HttpServletRequest request, HttpServletResponse response) throws IOException {
-//        List<String> errors = new ArrayList<>();
-//        Product product = new Product();
-//        try {
-//            int product_id = Integer.parseInt(request.getParameter("id"));
-//            validateProductId(request, errors, product, Integer.parseInt(String.valueOf(product_id)));
-//            validateProductName(request, errors, product);
-//            validatePrice(request, errors, product);
-//            validateQuantity(request, errors, product);
-//            String product_size = request.getParameter("size");
-//            if (!ValidateUtils.isSize(product_size)) {
-//                errors.add("Size sản phẩm không hợp lệ. Phải là các size \"S, M, L, XL, XXL\"");
-//            }
-//
-//            String product_img = "images/" + request.getParameter("image");
-//
-//            if (product_img.equals("images/")) {
-//                errors.add("Chưa có hình ảnh! Thêm hình ảnh sản phẩm để thêm sản phẩm.");
-//            }
-//            String product_describe = request.getParameter("describe");
-//
-//            String category_id = request.getParameter("category_id");
-//            if (category_id.equals("-- Chọn danh mục --")) {
-//                errors.add("Category sản phẩm không hợp lệ. Vui lòng chọn category sản phẩm");
-//            } else {
-//                int cid = Integer.parseInt(category_id);
-//                Category cate = new Category(cid);
-//                product.setCategory(cate);
-//            }
-//
-//            product.setDescrible(product_describe);
-//            product.setImage(product_img);
-//            product.setProductSizes(product.getProductSizes());
-//
-//
-//            if (errors.isEmpty()) {
-//                productDAO.insertProduct(product);
-//                request.setAttribute("message", "Thêm sản phẩm thành công");
-//            } else {
-//                request.setAttribute("errors", errors);
-//            }
-//            showInsertProduct(request, response);
-////            request.getRequestDispatcher("/admin/insertProduct.jsp").forward(request, response);
-////            response.sendRedirect("/productManager?action=insertProduct");
-//        } catch (Exception e) {
-//            response.sendRedirect("404.jsp");
-//        }
-//    }
-
-    private void validateProductId(HttpServletRequest req, List<String> errors, Product product, int product_id) {
-        if (!ValidateUtils.isIdProduct(String.valueOf(product_id))) {
-            errors.add("Id không hợp lệ. Phải bắt đầu là chữ và không quá 10 kí tự!");
+    private void deleteProduct(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        try {
+            int product_id = Integer.parseInt(request.getParameter("product_id"));
+            productDAO.DeleteProduct(product_id);
+//            request.getRequestDispatcher("/admin/product.jsp").forward(request, response);
+            response.sendRedirect("/productManager");
+        } catch (Exception e) {
+            response.sendRedirect("404.jsp");
         }
-        product.setId(product.getId());
+
+    }
+    private String extractFileName(Part part) {
+        String contentDisp = part.getHeader("content-disposition");
+        String[] items = contentDisp.split(";");
+        for (String s : items) {
+            if (s.trim().startsWith("filename")) {
+                return s.substring(s.indexOf("=") + 2, s.length() - 1);
+            }
+        }
+        return "";
+    }
+    private void insertProduct(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        List<String> errors = new ArrayList<>();
+        Product product = new Product();
+        try {
+            String product_size = request.getParameter("size");
+            if (!ValidateUtils.isSize(product_size)) {
+                errors.add("Size sản phẩm không hợp lệ. Phải là các size \"S, M, L, XL, XXL\"");
+            }
+            String fileNameProductImg = "";
+
+            String urlApp = getServletContext().getRealPath("/");
+            System.out.println(urlApp);
+
+            for (Part part : request.getParts()) {
+                String fileName = extractFileName(part);
+                if (!fileName.equals("")) {
+                    fileName = new File(fileName).getName();
+
+                    fileNameProductImg = fileName;
+                    part.write("D:\\CodeG\\casestudy_3\\src\\main\\webapp\\assets\\images" + File.separator + fileName);
+                    part.write(urlApp + "\\assets\\images" + File.separator + fileName);
+                }
+            }
+            String product_img = "\\assets\\images" + fileNameProductImg;
+
+            String product_describe = request.getParameter("describe");
+            String category_id = request.getParameter("category_id");
+            if (category_id.equals("-- Chọn danh mục --")) {
+                errors.add("Category sản phẩm không hợp lệ. Vui lòng chọn category sản phẩm");
+            } else {
+                int cid = Integer.parseInt(category_id);
+                Category cate = new Category(cid);
+                product.setCategory(cate);
+            }
+            String[] size_rw = product_size.split("\\s*,\\s*");
+            int[] size = new int[size_rw.length];
+            List<ProductSize> sizeList = new ArrayList<>();
+            try {
+                for (int i = 0; i < size.length; i++) {
+                    ProductSize s = new ProductSize(size_rw[i]);
+                    sizeList.add(s);
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            String product_name = request.getParameter("product_name");
+            product.setName(product_name);
+            validatePrice(request, errors, product);
+            validateQuantity(request, errors, product);
+            product.setDescrible(product_describe);
+            product.setImage(product_img);
+            product.setProductSizes(sizeList);
+            if (errors.isEmpty()) {
+                productDAO.insertProduct(product);
+                request.setAttribute("message", "Thêm sản phẩm thành công");
+            } else {
+                request.setAttribute("errors", errors);
+            }
+            showProduct(request, response);
+//            request.getRequestDispatcher("/admin/insertProduct.jsp").forward(request, response);
+//            response.sendRedirect("/productManager?action=insertProduct");
+        } catch (Exception e) {
+            e.printStackTrace();
+            response.sendRedirect("404.jsp");
+        }
     }
 
-    private void validateProductName(HttpServletRequest req, List<String> errors, Product product) {
-        String product_name = req.getParameter("product_name");
-        if (!ValidateUtils.isNameProduct(product_name)) {
-            errors.add("Tên sản phẩm không hợp lệ. Phải bắt đầu là chữ số và có từ 6-255 kí tự!");
-        }
-        product.setName(product.getName());
-    }
+
 
     private void validatePrice(HttpServletRequest req, List<String> errors, Product product) {
         try {
@@ -230,4 +265,62 @@ public class ProductManagerServlet extends HttpServlet {
             response.sendRedirect("404.jsp");
         }
     }
+
+
+    private void updateProduct(HttpServletRequest request, HttpServletResponse response) throws Exception {
+        List<String> errors = new ArrayList<>();
+        Product product = new Product();
+            int product_id = Integer.parseInt( request.getParameter("product_id"));
+            String product_name = request.getParameter("product_name");
+            validatePrice(request, errors, product);
+            validateQuantity(request, errors, product);
+            String category_id = request.getParameter("category_id");
+            String product_size = request.getParameter("product_size");
+            if (!ValidateUtils.isSize(product_size)) {
+                errors.add("Size sản phẩm không hợp lệ. Phải là các size \"S, M, L, XL, XXL\"");
+            }
+
+        String fileNameProductImg = "";
+        String urlApp = getServletContext().getRealPath("/");
+        System.out.println(urlApp);
+
+        for (Part part : request.getParts()) {
+            String fileName = extractFileName(part);
+            if (!fileName.equals("")) {
+                fileName = new File(fileName).getName();
+
+                fileNameProductImg = fileName;
+                part.write("D:\\CodeG\\casestudy_3\\src\\main\\webapp\\assets\\images" + File.separator + fileName);
+                part.write(urlApp + "\\assets\\images" + File.separator + fileName);
+            }
+        }
+            String product_img = "\\assets\\images" + File.separator + fileNameProductImg;
+            String product_describe = request.getParameter("product_describe");
+            int cid = Integer.parseInt(category_id);
+            Category cate = new Category(cid);
+            String[] size_rw = product_size.split("\\s*,\\s*");
+            //size
+            List<ProductSize> list = new ArrayList<>();
+            try {
+                for (int i = 0; i < size_rw.length; i++) {
+                    ProductSize s = new ProductSize(product_id, size_rw[i]);
+                    list.add(s);
+                }
+            } catch (Exception e) {
+            }
+            product.setId(product_id);
+            product.setName(product_name);
+            product.setCategory(cate);
+            product.setDescrible(product_describe);
+            product.setImage(product_img);
+            product.setProductSizes(list);
+            if (errors.isEmpty()) {
+                productDAO.UpdateProduct(product);
+                request.setAttribute("message", "Thêm sản phẩm thành công");
+            } else {
+                request.setAttribute("errors", errors);
+            }
+            showProduct(request,response);
+        }
+
 }

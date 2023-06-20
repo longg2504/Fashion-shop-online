@@ -1,5 +1,7 @@
 package utils;
 
+import java.util.Arrays;
+import java.util.List;
 import java.util.regex.Pattern;
 
 public class ValidateUtils {
@@ -17,7 +19,14 @@ public class ValidateUtils {
     public static final String SIZE_PRODUCT_REGEX = "^(S|M|L|XL|XXL)(,\\s*(S|M|L|XL|XXL))*$";
     public static final String COLOR_PRODUCT_REGEX = "^(?:[\\p{L}\\s]+(?:,\\s)?)+$";
     public static boolean isSize(String size) {
-        return Pattern.matches(SIZE_PRODUCT_REGEX, size);
+        List<String> list =  Arrays.asList("S", "M", "L", "XL", "XXL");
+        String[] sizes = size.split(",");
+        for (String item: sizes) {
+            if(!list.contains(item)){
+                return false;
+            }
+        }
+        return true;
     }
     public static boolean isColor(String color) {
         return Pattern.compile(COLOR_PRODUCT_REGEX).matcher(color).matches();

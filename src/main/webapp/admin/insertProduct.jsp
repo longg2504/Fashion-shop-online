@@ -13,7 +13,7 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/boxicons@latest/css/boxicons.min.css">
     <!-- or -->
     <link rel="stylesheet" href="https://unpkg.com/boxicons@latest/css/boxicons.min.css">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/2.1.2/sweetalert.min.js"></script>
+
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.2/css/all.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-confirm/3.3.2/jquery-confirm.min.css">
     <link rel="stylesheet" type="text/css"
@@ -30,7 +30,7 @@
         <script>
             window.onload = function () {
                 Swal.fire({
-                    position: 'top-end',
+                    position: 'center',
                     icon: 'success',
                     title: 'Thêm sản phẩm thành công!',
                     showConfirmButton: false,
@@ -173,22 +173,22 @@
     <div class="app-sidebar__user"><img class="app-sidebar__user-avatar" src="admin/images/user.png" width="50px"
                                         alt="User Image">
         <div>
-            <p class="app-sidebar__user-name"><b>${sessionScope.user.getUser_name()}</b></p>
+            <p class="app-sidebar__user-name"><b>${sessionScope.user.getLast_name()}</b></p>
             <p class="app-sidebar__user-designation">Chào mừng bạn trở lại</p>
         </div>
     </div>
     <hr>
     <ul class="app-menu">
-        <li><a class="app-menu__item" href="dashboard"><i class='app-menu__icon bx bx-tachometer'></i><span
+        <li><a class="app-menu__item" href="/dashboard"><i class='app-menu__icon bx bx-tachometer'></i><span
                 class="app-menu__label">Bảng điều khiển</span></a></li>
-        <li><a class="app-menu__item" href="customerManager"><i class='app-menu__icon bx bx-user-voice'></i><span
+        <li><a class="app-menu__item" href="/customerManager"><i class='app-menu__icon bx bx-user-voice'></i><span
                 class="app-menu__label">Quản lý khách hàng</span></a></li>
-        <li><a class="app-menu__item" href="productManager"><i
+        <li><a class="app-menu__item" href="/productManager"><i
                 class='app-menu__icon bx bx-purchase-tag-alt'></i><span class="app-menu__label">Quản lý sản phẩm</span></a>
         </li>
-        <li><a class="app-menu__item" href="orderManager"><i class='app-menu__icon bx bx-task'></i><span
+        <li><a class="app-menu__item" href="/orderManager"><i class='app-menu__icon bx bx-task'></i><span
                 class="app-menu__label">Quản lý đơn hàng</span></a></li>
-        <li><a class="app-menu__item" href="revenueManager"><i class='app-menu__icon fa-solid fa-sack-dollar'></i><span
+        <li><a class="app-menu__item" href="/revenueManager"><i class='app-menu__icon fa-solid fa-sack-dollar'></i><span
                 class="app-menu__label">Quản lý doanh thu</span></a></li>
         <li><a class="app-menu__item"
                href="https://docs.google.com/spreadsheets/d/1elWy0LYj9ngbmywMGwy8Noe_K7WmyisQ6aHOK6RnXZI"
@@ -215,39 +215,30 @@
                         </div>
                     </div>
 
-                    <form class="row" action="/productManager?action=insertProduct" method="POST">
-                        <div class="form-group col-md-3">
-                            <label class="control-label">Mã sản phẩm </label>
-                            <input class="form-control" name="product_id" type="text" placeholder="" value="" required>
-                        </div>
-                        <div class="form-group col-md-3">
+                    <form class="row " action="/productManager?action=insertProduct" method="POST" enctype="multipart/form-data">
+                        <div class="form-group col-12">
                             <label for="exampleSelect1" class="control-label">Danh mục</label>
                             <select name="category_id" class="form-control" id="exampleSelect1">
                                     <option>-- Chọn danh mục --</option>
                                 <c:forEach items="${requestScope.CategoryData}" var="cat">
-                                    <option value="${cat.getCategoryID()}">${cat.getCategoryName()}</option>
+                                    <option value="${cat.getId()}">${cat.getName()}</option>
                                 </c:forEach>
                             </select>
                         </div>
-                        <div class="form-group col-md-3">
+                        <div class="form-group col-12">
                             <label class="control-label">Tên sản phẩm</label>
                             <input class="form-control" name="product_name" type="text" value="" required>
                         </div>
-                        <div class="form-group  col-md-3">
+                        <div class="form-group  col-12">
                             <label class="control-label">Giá bán</label>
                             <input class="form-control" name="product_price" type="number" value="" required>
                         </div>
-                        <div class="form-group col-md-3">
+                        <div class="form-group col-md-12">
                             <label class="control-label">Size</label>
                             <input class="form-control" name="size" type="text" placeholder="S, M, L, XL, XXL" value=""
                                    required>
                         </div>
-                        <div class="form-group col-md-3">
-                            <label class="control-label">Màu</label>
-                            <input class="form-control" placeholder="ĐEN, TRẮNG,..." name="color" type="text" value=""
-                                   required>
-                        </div>
-                        <div class="form-group  col-md-3">
+                        <div class="form-group  col-md-12">
                             <label class="control-label">Số lượng</label>
                             <input class="form-control" name="product_quantity" type="number" value="" required>
                         </div>
@@ -277,7 +268,7 @@
                                     </c:forEach>
                                 </ul>
                         </c:if>
-                        <button class="btn btn-save" type="submit">Lưu lại</button>
+                        <button style="margin-left: 16px;" class="btn btn-save" type="submit">Lưu lại</button>
                         &nbsp;
                         <a class="btn btn-cancel" href="productManager">Hủy bỏ</a>
                     </form>
@@ -317,7 +308,7 @@
                         <label class="control-label">Danh mục sản phẩm hiện đang có</label>
                         <ul style="padding-left: 20px;">
                             <c:forEach items="${requestScope.CategoryData}" var="cat">
-                                <li>${cat.getCategoryName()}</li>
+                                <li>${cat.getName()}</li>
                             </c:forEach>
                         </ul>
                     </div>
@@ -326,12 +317,12 @@
         </div>
     </div>
 </div>
-
-<script src="admin/js/jquery-3.2.1.min.js"></script>
-<script src="admin/js/popper.min.js"></script>
-<script src="admin/js/bootstrap.min.js"></script>
-<script src="admin/js/main.js"></script>
-<script src="admin/js/plugins/pace.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/2.1.2/sweetalert.min.js"></script>
+<script src="/admin/js/jquery-3.2.1.min.js"></script>
+<script src="/admin/js/popper.min.js"></script>
+<script src="/admin/js/bootstrap.min.js"></script>
+<script src="/admin/js/main.js"></script>
+<script src="/admin/js/plugins/pace.min.js"></script>
 <script>
     const inpFile = document.getElementById("inpFile");
     const loadFile = document.getElementById("loadFile");

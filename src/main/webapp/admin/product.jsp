@@ -36,7 +36,7 @@
 
 
         <!-- User Menu-->
-        <li><a class="app-nav__item" href="dashboard"><i class='bx bx-log-out bx-rotate-180'></i> </a>
+        <li><a class="app-nav__item" href="/dashboard"><i class='bx bx-log-out bx-rotate-180'></i> </a>
 
         </li>
     </ul>
@@ -47,22 +47,22 @@
     <div class="app-sidebar__user"><img class="app-sidebar__user-avatar" src="admin/images/user.png" width="50px"
                                         alt="User Image">
         <div>
-            <p class="app-sidebar__user-name"><b>${sessionScope.user.getUser_name()}</b></p>
+            <p class="app-sidebar__user-name"><b>${sessionScope.user.getLast_name()}</b></p>
             <p class="app-sidebar__user-designation">Chào mừng bạn trở lại</p>
         </div>
     </div>
     <hr>
     <ul class="app-menu">
-        <li><a class="app-menu__item" href="dashboard"><i class='app-menu__icon bx bx-tachometer'></i><span
+        <li><a class="app-menu__item" href="/dashboard"><i class='app-menu__icon bx bx-tachometer'></i><span
                 class="app-menu__label">Bảng điều khiển</span></a></li>
-        <li><a class="app-menu__item" href="customerManager"><i class='app-menu__icon bx bx-user-voice'></i><span
+        <li><a class="app-menu__item" href="/customerManager"><i class='app-menu__icon bx bx-user-voice'></i><span
                 class="app-menu__label">Quản lý khách hàng</span></a></li>
-        <li><a class="app-menu__item" href="productManager"><i
+        <li><a class="app-menu__item" href="/productManager"><i
                 class='app-menu__icon bx bx-purchase-tag-alt'></i><span class="app-menu__label">Quản lý sản phẩm</span></a>
         </li>
-        <li><a class="app-menu__item" href="orderManager"><i class='app-menu__icon bx bx-task'></i><span
+        <li><a class="app-menu__item" href="/orderManager"><i class='app-menu__icon bx bx-task'></i><span
                 class="app-menu__label">Quản lý đơn hàng</span></a></li>
-        <li><a class="app-menu__item" href="revenueManager"><i class='app-menu__icon fa-solid fa-sack-dollar'></i><span
+        <li><a class="app-menu__item" href="/revenueManager"><i class='app-menu__icon fa-solid fa-sack-dollar'></i><span
                 class="app-menu__label">Quản lý doanh thu</span></a></li>
         <li><a class="app-menu__item"
                href="https://docs.google.com/spreadsheets/d/1elWy0LYj9ngbmywMGwy8Noe_K7WmyisQ6aHOK6RnXZI"
@@ -122,7 +122,6 @@
                             <th>Tên sản phẩm</th>
                             <th>Giá</th>
                             <th>Size</th>
-                            <th>Màu</th>
                             <th>Thông tin</th>
                             <th>Số lượng</th>
                             <th>Ảnh</th>
@@ -132,38 +131,30 @@
                         <tbody>
                         <c:forEach items="${requestScope.ProductData}" var="p">
                             <tr>
-                                <td>${p.getProduct_id()}</td>
-                                <td>${p.cate.getCategoryName()}</td>
-                                <td>${p.getProduct_name()}</td>
-                                <td>${p.getProduct_price()}</td>
+                                <td>${p.getId()}</td>
+                                <td>${p.category.getName()}</td>
+                                <td>${p.getName()}</td>
+                                <td>${p.getPrice()}</td>
                                 <td>
                                     <c:forEach items="${requestScope.SizeData}" var="s">
-                                        <c:if test="${p.getProduct_id()==s.getProduct_id()}">
+                                        <c:if test="${p.getId()==s.getProduct_id()}">
                                             ${s.getSize()}
                                         </c:if>
                                     </c:forEach>
                                 </td>
-
-                                <td>
-                                    <c:forEach items="${requestScope.ColorData}" var="c">
-                                        <c:if test="${p.getProduct_id()==c.getProduct_id()}">
-                                            ${c.getColor()}
-                                        </c:if>
-                                    </c:forEach>
-                                </td>
-                                <td>${p.getProduct_describe()}</td>
+                                <td>${p.getDescrible()}</td>
                                 <td>${p.getQuantity()}</td>
-                                <td><img src="${p.getImg()}" alt="" width="100px;"></td>
+                                <td><img src="${p.getImage()}" alt="" width="100px;"></td>
 
                                 <td>
                                     <button class="btn btn-primary btn-sm trash" type="button" title="Xóa"
-                                            value="${p.getProduct_id()}"><i
+                                            value="${p.getId()}"><i
                                             class="fas fa-trash-alt"></i>
                                     </button>
 
                                     <button class="btn btn-primary btn-sm edit" type="button" title="Sửa"
                                             id="show-emp"
-                                            data-toggle="modal" data-target="#ModalUP${p.getProduct_id()}"><i
+                                            data-toggle="modal" data-target="#ModalUP${p.getId()}"><i
                                             class="fas fa-edit"></i>
                                     </button>
 
@@ -174,12 +165,12 @@
                             MODAL
                             -->
 
-                            <div class="modal fade" id="ModalUP${p.getProduct_id()}" tabindex="-1" role="dialog"
+                            <div class="modal fade" id="ModalUP${p.getId()}" tabindex="-1" role="dialog"
                                  aria-hidden="true" data-backdrop="static"
                                  data-keyboard="false">
                                 <div class="modal-dialog modal-dialog-centered" role="document">
                                     <div class="modal-content">
-                                        <form action="/productManager?action=updateProduct" method="POST">
+                                        <form action="/productManager?action=updateProduct" method="POST" enctype="multipart/form-data">
                                             <div class="modal-body">
                                                 <div class="row">
                                                     <div class="form-group  col-md-12">
@@ -192,7 +183,7 @@
                                                     <div class="form-group col-md-6">
                                                         <label class="control-label">Mã sản phẩm </label>
                                                         <input class="form-control" type="text" readonly
-                                                               name="product_id" value="${p.getProduct_id()}">
+                                                               name="product_id" value="${p.getId()}">
                                                     </div>
                                                     <div class="form-group col-md-6">
                                                         <label for="exampleSelect1" class="control-label">Danh
@@ -200,41 +191,35 @@
                                                         <select name="category_id" class="form-control"
                                                                 id="exampleSelect1">
                                                             <c:forEach items="${requestScope.CategoryData}" var="cat">
-                                                                <c:if test="${p.getCate().getCategoryID()==cat.getCategoryID()}">
-                                                                    <option>${cat.getCategoryName()}</option>
+                                                                <c:if test="${p.getCategory().getId()==cat.getId()}">
+                                                                    <option>${cat.getName()}</option>
                                                                 </c:if>
                                                             </c:forEach>
                                                             <c:forEach items="${requestScope.CategoryData}" var="cat">
-                                                                <option value="${cat.getCategoryID()}">${cat.getCategoryName()}</option>
+                                                                <option value="${cat.getId()}">${cat.getName()}</option>
                                                             </c:forEach>
                                                         </select>
                                                     </div>
                                                     <div class="form-group col-md-6">
                                                         <label class="control-label">Tên sản phẩm</label>
                                                         <input class="form-control" type="text" name="product_name"
-                                                               required value="${p.getProduct_name()}">
+                                                               required value="${p.getName()}">
                                                     </div>
                                                     <div class="form-group col-md-6">
                                                         <label class="control-label">Giá</label>
                                                         <input class="form-control" type="number" name="product_price"
-                                                               required value="${p.getProduct_price()}">
+                                                               required value="${p.getPrice()}">
                                                     </div>
-                                                    <div class="form-group col-md-6">
-                                                        <label class="control-label">Màu</label>
-                                                        <input class="form-control" name="product_color" type="text"
-                                                               value="<c:forEach items="${requestScope.ColorData}" var="c"><c:if test="${p.getProduct_id()==c.getProduct_id()}">${c.getColor()},</c:if></c:forEach>">
-                                                    </div>
-
                                                     <div class="form-group col-md-6">
                                                         <label class="control-label">Size</label>
                                                         <input class="form-control" name="product_size" type="text"
-                                                               value="<c:forEach items="${requestScope.SizeData}" var="s"><c:if test="${p.getProduct_id()==s.getProduct_id()}">${s.getSize()},</c:if></c:forEach>">
+                                                               value="<c:forEach items="${requestScope.SizeData}" var="s"><c:if test="${p.getId()==s.getProduct_id()}">${s.getSize()},</c:if></c:forEach>">
                                                     </div>
 
                                                     <div class="form-group col-md-6">
                                                         <label class="control-label">Thông tin</label>
                                                         <input class="form-control" type="text" name="product_describe"
-                                                               value="${p.getProduct_describe()}">
+                                                               value="${p.getDescrible()}">
                                                     </div>
 
                                                     <div class="form-group col-md-6">
@@ -373,22 +358,22 @@
             });
         });
     });
-    // $(document).ready(jQuery(function () {
-    //     jQuery(".trash").click(function () {
-    //         swal({
-    //             title: "Cảnh báo",
-    //             text: "Bạn có chắc chắn là muốn xóa sản phẩm này?",
-    //             buttons: ["Hủy bỏ", "Đồng ý"],
-    //         })
-    //                 .then((willDelete) => {
-    //                     if (willDelete) {
-    //                         window.location = "/productManager?action=deleteProduct&product_id=" + $(this).attr("value");
-    //                         swal("Đã xóa thành công.!", {
-    //                         });
-    //                     }
-    //                 });
-    //     });
-    // }));
+    $(document).ready(jQuery(function () {
+        jQuery(".trash").click(function () {
+            swal({
+                title: "Cảnh báo",
+                text: "Bạn có chắc chắn là muốn xóa sản phẩm này?",
+                buttons: ["Hủy bỏ", "Đồng ý"],
+            })
+                    .then((willDelete) => {
+                        if (willDelete) {
+                            window.location = "/productManager?action=deleteProduct&product_id=" + $(this).attr("value");
+                            swal("Đã xóa thành công.!", {
+                            });
+                        }
+                    });
+        });
+    }));
 </script>
 <script>
     var myApp = new function () {

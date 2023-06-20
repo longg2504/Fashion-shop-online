@@ -47,7 +47,7 @@
             <div class="app-sidebar__user"><img class="app-sidebar__user-avatar" src="admin/images/user.png" width="50px"
                                                 alt="User Image">
                 <div>
-                    <p class="app-sidebar__user-name"><b>${sessionScope.user.user_name}</b></p>
+                    <p class="app-sidebar__user-name"><b>${sessionScope.user.getLast_name()}</b></p>
                     <p class="app-sidebar__user-designation">Chào mừng bạn trở lại</p>
                 </div>
             </div>
@@ -105,7 +105,7 @@
                                     <c:forEach items="${requestScope.user}" var="u">
                                         <tr>
                                             <td>${u.getUser_id()}</td>
-                                            <td>${u.getUser_name()}</td>
+                                            <td>${u.getFirst_name()} ${u.getLast_name()}</td>
                                             <td>${u.getUser_email()}</td>
                                             <td>${u.getRole()}</td>
 <%--                                            <td><button class="btn btn-primary btn-sm edit" type="button" title="Sửa" id="show-emp" data-toggle="modal"--%>
