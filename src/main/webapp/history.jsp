@@ -55,14 +55,14 @@
                 <div class="row">
                     <div class="col-md-6">
                         <h1 class="text-uppercase">Invoice</h1>
-                        <div class="billed"><span class="font-weight-bold text-uppercase">UserName:</span><span
+                        <div class="billed"><span class="font-weight-bold text-uppercase">UserName:${sessionScope.user.getLast_name()}</span><span
                                 class="ml-1"> <?=$Use_Name?> </span></div>
-                        <div class="billed"><span class="font-weight-bold text-uppercase">User ID:</span><span
+                        <div class="billed"><span class="font-weight-bold text-uppercase">User ID:${sessionScope.user.getUser_id()}</span><span
                                 class="ml-1"> <?=$Use_ID?> </span></div>
 
                     </div>
                     <div class="col-md-6 text-right mt-3">
-                        <h4 class="text-danger mb-0">BILL</h4><span>#</span>
+                        <h4 class="text-danger mb-0">BILL HISTORY</h4>
                     </div>
                 </div>
                 <div class="mt-3">
@@ -93,9 +93,6 @@
                             </tbody>
                         </table>
                     </div>
-                </div>
-                <div class="text-right mb-3">
-                    <button class="btn btn-danger btn-sm mr-5" type="button">Confirm</button>
                 </div>
             </div>
         </div>

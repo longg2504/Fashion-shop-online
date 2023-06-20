@@ -47,22 +47,22 @@
     <div class="app-sidebar__user"><img class="app-sidebar__user-avatar" src="admin/images/user.png" width="50px"
                                         alt="User Image">
         <div>
-            <p class="app-sidebar__user-name"><b>${sessionScope.user.user_name}</b></p>
+            <p class="app-sidebar__user-name"><b>${sessionScope.user.getLast_name()}</b></p>
             <p class="app-sidebar__user-designation">Chào mừng bạn trở lại</p>
         </div>
     </div>
     <hr>
     <ul class="app-menu">
-        <li><a class="app-menu__item" href="dashboard"><i class='app-menu__icon bx bx-tachometer'></i><span
+        <li><a class="app-menu__item" href="/dashboard"><i class='app-menu__icon bx bx-tachometer'></i><span
                 class="app-menu__label">Bảng điều khiển</span></a></li>
-        <li><a class="app-menu__item" href="customerManager"><i class='app-menu__icon bx bx-user-voice'></i><span
+        <li><a class="app-menu__item" href="/customerManager"><i class='app-menu__icon bx bx-user-voice'></i><span
                 class="app-menu__label">Quản lý khách hàng</span></a></li>
-        <li><a class="app-menu__item" href="productManager"><i
+        <li><a class="app-menu__item" href="/productManager"><i
                 class='app-menu__icon bx bx-purchase-tag-alt'></i><span class="app-menu__label">Quản lý sản phẩm</span></a>
         </li>
-        <li><a class="app-menu__item" href="orderManager"><i class='app-menu__icon bx bx-task'></i><span
+        <li><a class="app-menu__item" href="/orderManager"><i class='app-menu__icon bx bx-task'></i><span
                 class="app-menu__label">Quản lý đơn hàng</span></a></li>
-        <li><a class="app-menu__item" href="revenueManager"><i class='app-menu__icon fa-solid fa-sack-dollar'></i><span
+        <li><a class="app-menu__item" href="/revenueManager"><i class='app-menu__icon fa-solid fa-sack-dollar'></i><span
                 class="app-menu__label">Quản lý doanh thu</span></a></li>
         <li><a class="app-menu__item"
                href="https://docs.google.com/spreadsheets/d/1elWy0LYj9ngbmywMGwy8Noe_K7WmyisQ6aHOK6RnXZI"
@@ -105,7 +105,7 @@
                         <c:forEach items="${requestScope.bill}" var="b">
                             <tr>
                                 <td>${b.getBill_id()}</td>
-                                <td>${b.user.getUser_name()}</td>
+                                <td>${b.user.getLast_name()}</td>
                                 <td>${b.getPhone()}</td>
                                 <td>${b.getAddress()}</td>
                                 <td>${b.getCreateDate()}</td>

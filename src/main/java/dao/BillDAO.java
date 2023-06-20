@@ -66,7 +66,7 @@ public class BillDAO extends DBContext {
 
         public List<Bill> getBillInfo() {
             List<Bill> list = new ArrayList<>();
-            String sql = "select b.id, u.user_name,b.phone,b.address,b.createDate,b.total,b.payment from bill b join user u on b.user_id = u.id;";
+            String sql = "select b.id, u.last_name,b.phone,b.address,b.createDate,b.total,b.payment from bill b join user u on b.user_id = u.id;";
             try {
                 conn = new DBContext().getConnection();
                 ps = conn.prepareStatement(sql);
@@ -80,6 +80,7 @@ public class BillDAO extends DBContext {
             }
             return list;
         }
+
         public Bill getBill() {
             List<Bill> list = new ArrayList<>();
             String sql = "select id, total, createDate from bill order by id desc limit 1;";
