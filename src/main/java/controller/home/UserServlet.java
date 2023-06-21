@@ -190,7 +190,7 @@ public class UserServlet extends HttpServlet {
             if(user.getRole().equals("true")) {
                 HttpSession session = request.getSession();
                 session.setAttribute("user", user);
-                response.sendRedirect("/admin/index.jsp");
+                response.sendRedirect("/dashboard");
             }
             else{
                 HttpSession session = request.getSession();

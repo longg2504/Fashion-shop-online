@@ -36,7 +36,19 @@
                         </div>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="/cart">Cart</a>
+                        <a class="nav-link" href="/cart">
+
+                                <c:choose>
+                                    <c:when test="${sessionScope.size > 0}">
+                                    <span style="color:white;background:red;border: 1px solid red;border-radius:50%;padding: 0 6px">
+                                        ${sessionScope.size}
+                                    </span>
+                                    </c:when>
+                                    <c:otherwise>
+                                    </c:otherwise>
+                                </c:choose>
+                            Cart
+                        </a>
                     </li>
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" href="contact" role="button"  data-bs-toggle="dropdown" aria-expanded="false">More</a>

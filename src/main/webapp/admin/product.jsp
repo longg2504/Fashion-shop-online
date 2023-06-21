@@ -36,7 +36,7 @@
 
 
         <!-- User Menu-->
-        <li><a class="app-nav__item" href="/dashboard"><i class='bx bx-log-out bx-rotate-180'></i> </a>
+        <li><a class="app-nav__item" href="home"><i class='bx bx-log-out bx-rotate-180'></i> </a>
 
         </li>
     </ul>
@@ -62,12 +62,6 @@
         </li>
         <li><a class="app-menu__item" href="/orderManager"><i class='app-menu__icon bx bx-task'></i><span
                 class="app-menu__label">Quản lý đơn hàng</span></a></li>
-        <li><a class="app-menu__item" href="/revenueManager"><i class='app-menu__icon fa-solid fa-sack-dollar'></i><span
-                class="app-menu__label">Quản lý doanh thu</span></a></li>
-        <li><a class="app-menu__item"
-               href="https://docs.google.com/spreadsheets/d/1elWy0LYj9ngbmywMGwy8Noe_K7WmyisQ6aHOK6RnXZI"
-               target="_blank"><i class='app-menu__icon bx bx-task'></i><span
-                class="app-menu__label">Kiểm tra phản hồi</span></a></li>
     </ul>
 </aside>
 <c:if test="${requestScope.message !=null}">

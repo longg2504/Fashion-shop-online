@@ -138,7 +138,7 @@ public class ProductServlet extends HttpServlet {
         List<Product> product = productDAO.getListByPage(productList, start, end);
         request.setAttribute("page", page);
         request.setAttribute("num", num);
-        request.setAttribute("CategoryData", category);
+        request.setAttribute("ListAllCategory", category);
         request.setAttribute("ProductData", product);
         request.getRequestDispatcher("/products.jsp").forward(request, response);
     }
@@ -161,7 +161,7 @@ public class ProductServlet extends HttpServlet {
         List<Product> product = productDAO.getListByPage(productList, start, end);
         request.setAttribute("page", page);
         request.setAttribute("num", num);
-        request.setAttribute("CategoryData", category);
+        request.setAttribute("ListAllCategory", category);
         request.setAttribute("ProductData", product);
         request.getRequestDispatcher("/products.jsp").forward(request, response);
     }
@@ -184,7 +184,7 @@ public class ProductServlet extends HttpServlet {
         List<Product> product = productDAO.getListByPage(productList, start, end);
         request.setAttribute("page", page);
         request.setAttribute("num", num);
-        request.setAttribute("CategoryData", category);
+        request.setAttribute("ListAllCategory", category);
         request.setAttribute("ProductData", product);
         request.getRequestDispatcher("/products.jsp").forward(request, response);
     }
@@ -227,7 +227,7 @@ public class ProductServlet extends HttpServlet {
         List<Product> product = productDAO.getListByPage(productList, start, end);
         request.setAttribute("page", page);
         request.setAttribute("num", num);
-        request.setAttribute("CategoryData", category);
+        request.setAttribute("ListAllCategory", category);
         request.setAttribute("ProductData", product);
         request.getRequestDispatcher("/products.jsp").forward(request, response);
     }
@@ -251,7 +251,7 @@ public class ProductServlet extends HttpServlet {
         List<Product> product = productDAO.getListByPage(productList, start, end);
         request.setAttribute("page", page);
         request.setAttribute("num", num);
-        request.setAttribute("CategoryData", category);
+        request.setAttribute("ListAllCategory", category);
         request.setAttribute("ProductData", product);
         request.getRequestDispatcher("/products.jsp").forward(request, response);
     }

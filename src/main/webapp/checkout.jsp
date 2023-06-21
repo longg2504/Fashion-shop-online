@@ -144,7 +144,7 @@
     <script>
         window.onload = function () {
             Swal.fire({
-                position: 'top-end',
+                position: 'center',
                 icon: 'success',
                 title: 'Đặt hàng thành công!',
                 showConfirmButton: false,

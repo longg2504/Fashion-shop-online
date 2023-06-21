@@ -31,7 +31,7 @@
 <header class="app-header">
     <a class="app-sidebar__toggle" href="#" data-toggle="sidebar" aria-label="Hide Sidebar"></a>
     <ul class="app-nav">
-        <li><a class="app-nav__item" href="dashboard"><i class='bx bx-log-out bx-rotate-180'></i> </a>
+        <li><a class="app-nav__item" href="home"><i class='bx bx-log-out bx-rotate-180'></i> </a>
         </li>
     </ul>
 </header>
@@ -41,7 +41,7 @@
     <div class="app-sidebar__user"><img class="app-sidebar__user-avatar" src="admin/images/user.png" width="50px"
                                         alt="User Image">
         <div>
-            <p class="app-sidebar__user-name"><b>${sessionScope.user.user_name}</b></p>
+            <p class="app-sidebar__user-name"><b>${sessionScope.user.getLast_name}</b></p>
             <p class="app-sidebar__user-designation">Chào mừng bạn trở lại</p>
         </div>
     </div>
@@ -56,12 +56,6 @@
         </li>
         <li><a class="app-menu__item" href="orderManager"><i class='app-menu__icon bx bx-task'></i><span
                 class="app-menu__label">Quản lý đơn hàng</span></a></li>
-        <li><a class="app-menu__item" href="revenueManager"><i class='app-menu__icon fa-solid fa-sack-dollar'></i><span
-                class="app-menu__label">Quản lý doanh thu</span></a></li>
-        <li><a class="app-menu__item"
-               href="https://docs.google.com/spreadsheets/d/1elWy0LYj9ngbmywMGwy8Noe_K7WmyisQ6aHOK6RnXZI"
-               target="_blank"><i class='app-menu__icon bx bx-task'></i><span
-                class="app-menu__label">Kiểm tra phản hồi</span></a></li>
     </ul>
 </aside>
 <main class="app-content">
@@ -89,7 +83,6 @@
                             <th>Mã sản phẩm</th>
                             <th>Tên sản phẩm</th>
                             <th>Size</th>
-                            <th>Màu</th>
                             <th>Số lượng</th>
                             <th>Đơn giá</th>
                         </tr>
@@ -97,11 +90,10 @@
                         <tbody>
                         <c:forEach items="${requestScope.detail}" var="d">
                             <tr>
-                                <td><img src="${d.product.getImg()}" alt="" width="100px;"></td>
-                                <td>${d.product.getProduct_id()}</td>
-                                <td>${d.product.getProduct_name()}</td>
+                                <td><img src="${d.product.getImage()}" alt="" width="100px;"></td>
+                                <td>${d.product.getId()}</td>
+                                <td>${d.product.getName()}</td>
                                 <td>${d.getSize()}</td>
-                                <td>${d.getColor()}</td>
                                 <td>${d.getQuantity()}</td>
                                 <td>${d.getBillDetailPrice(d.getPrice())}</td>
                             </tr>

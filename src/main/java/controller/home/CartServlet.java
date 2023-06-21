@@ -183,6 +183,6 @@ import java.util.Objects;
         session.setAttribute("total",CurrencyFormat.covertPriceToString(cart.getTotalMoney(cart.getItems())));
         session.setAttribute("size", list.size());
         request.setAttribute("message", "Xóa sản phẩm thành công");
-        request.getRequestDispatcher("/cart.jsp").forward(request, response);
+        showCart(request,response);
     }
     }

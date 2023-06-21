@@ -60,12 +60,6 @@
         </li>
         <li><a class="app-menu__item" href="/orderManager"><i class='app-menu__icon bx bx-task'></i><span
                 class="app-menu__label">Quản lý đơn hàng</span></a></li>
-        <li><a class="app-menu__item" href="/revenueManager"><i class='app-menu__icon fa-solid fa-sack-dollar'></i><span
-                class="app-menu__label">Quản lý doanh thu</span></a></li>
-        <li><a class="app-menu__item"
-               href="https://docs.google.com/spreadsheets/d/1elWy0LYj9ngbmywMGwy8Noe_K7WmyisQ6aHOK6RnXZI"
-               target="_blank"><i class='app-menu__icon bx bx-task'></i><span
-                class="app-menu__label">Kiểm tra phản hồi</span></a></li>
     </ul>
 </aside>
 <main class="app-content">
@@ -138,48 +132,6 @@
                             <p><b>${requestScope.revenue}</b></p>
                             <p class="info-tong">Số sản phẩm cảnh báo hết cần nhập thêm.</p>
                         </div>
-                    </div>
-                </div>
-                <!-- col-12 -->
-                <div class="col-md-12">
-                    <div class="tile">
-                        <h3 class="tile-title">Đơn hàng hôm nay</h3>
-                        <div>
-                            <table class="table table-bordered">
-                                <thead>
-                                <tr>
-                                    <th>ID đơn hàng</th>
-                                    <th>Khách hàng</th>
-                                    <th>Số điện thoại</th>
-                                    <th>Địa chỉ</th>
-                                    <th>Ngày mua</th>
-                                    <th>Tổng tiền</th>
-                                    <th>Thanh Toán</th>
-                                    <th>Chức năng</th>
-
-                                </tr>
-                                </thead>
-                                <tbody>
-                                <c:forEach items="${requestScope.billbyday}" var="b">
-                                    <tr>
-                                        <td>${b.getBill_id()}</td>
-                                        <td>${b.user.getUser_name()}</td>
-                                        <td>${b.getPhone()}</td>
-                                        <td>${b.getAddress()}</td>
-                                        <td>${b.getCreateDate()}</td>
-                                        <td>${b.getBillTotal(b.getTotal())}</td>
-                                        <td><span class="badge bg-success">${b.getPayment()}</span></td>
-                                        <td>
-                                            <a style=" color: rgb(245 157 57);background-color: rgb(251 226 197); padding: 5px;border-radius: 5px;"
-                                               href="orderManager?action=showDetail&bill_id=${b.getBill_id()}"><i
-                                                    class="fa"></i>Chi tiết đơn hàng</a></td>
-                                    </tr>
-                                </c:forEach>
-
-                                </tbody>
-                            </table>
-                        </div>
-                        <!-- / div trống-->
                     </div>
                 </div>
                 <!-- / col-12 -->
