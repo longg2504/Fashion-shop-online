@@ -47,7 +47,7 @@ public class DashboardServlet extends HttpServlet {
                 request.setAttribute("billbyday", billbyday);
                 request.getRequestDispatcher("/admin/index.jsp").forward(request, response);
             } else {
-                response.sendRedirect("login");
+                response.sendRedirect("/home/user");
             }
         } catch (Exception e) {
             response.sendRedirect("404.jsp");
